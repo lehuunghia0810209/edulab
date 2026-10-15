@@ -73,9 +73,9 @@ test('Nexus selection, reset, raycast and fallback controls', async ({ page }) =
   await fallback.locator('.nexus-node[data-lab="biolab"]').click();
   await expect(fallback.locator('#nexus-hud-name')).toHaveText('BioLab');
   await expect(fallback.locator('.nexus-ring-outer')).toHaveCSS('animation-play-state', 'running');
-  await fallback.locator('#motion-toggle').click();
+  await fallback.locator('#reduce-motion-setting').check();
   await expect(fallback.locator('.nexus-ring-outer')).toHaveCSS('animation-play-state', 'paused');
-  await fallback.locator('#motion-toggle').click();
+  await fallback.locator('#reduce-motion-setting').uncheck();
   await fallback.locator('#faq').scrollIntoViewIfNeeded();
   await expect(fallback.locator('.nexus-ring-outer')).toHaveCSS('animation-play-state', 'paused');
   await fallback.close();
@@ -316,7 +316,7 @@ test('rapid planet switching settles on the last requested state', async ({ page
 });
 
 test('poster failure activates the geometric hero fallback', async ({ page }) => {
-  await page.route('**/*hf_20260827_202133_*.png', route => route.abort());
+  await page.route('**/assets/planet-*.webp', route => route.abort());
   await page.goto('/');
   await expect(page.locator('.planet-hero')).toHaveClass(/has-poster-fallback/);
   await expect(page.locator('.planet-poster[data-planet="earth"]')).toHaveClass(/is-broken/);
@@ -406,8 +406,9 @@ test('major sections resolve their individual reveal states', async ({ page }) =
   }
 });
 
-test('all remote hero media can fail without broken-image UI', async ({ page }) => {
+test('all hero media can fail without broken-image UI', async ({ page }) => {
   await page.route('https://d8j0ntlcm91z4.cloudfront.net/**', route => route.abort());
+  await page.route('**/assets/planet-*.webp', route => route.abort());
   await page.goto('/');
   await expect(page.locator('.planet-hero')).toHaveClass(/has-poster-fallback/);
   await expect(page.locator('.planet-side.has-fallback')).toHaveCount(2);

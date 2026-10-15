@@ -13,6 +13,7 @@ import { initNavigation } from './modules/navigation.js';
 import { initPlanetHero } from './modules/planet-hero.js';
 import { initThemeToggle } from './modules/theme.js';
 import { initLivingUniverse } from './modules/living-universe.js';
+import { initializeMotionSystem } from './modules/motion-controller.js';
 
 initEntranceAnimation();
 initPlanetHero();
@@ -26,5 +27,6 @@ const disposeUniverse = initLivingUniverse();
 initFAQ();
 initScrollReveals();
 initFooterYear();
+initializeMotionSystem();
 
 if (import.meta.hot) import.meta.hot.dispose(disposeUniverse);

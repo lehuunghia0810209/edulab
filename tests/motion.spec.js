@@ -49,34 +49,37 @@ for (const width of [1440, 390]) {
       expect(difference(initial,after5), `${name}: 5s`).toBeGreaterThan(.04);
       results.push({name,initial,after2,after5});
     }
-    await mkdir('artifacts/motion-5',{recursive:true});
-    await writeFile(`artifacts/motion-5/samples-${width}.json`,JSON.stringify(results,null,2));
+    await mkdir('artifacts/v5-refined/after',{recursive:true});
+    await writeFile(`artifacts/v5-refined/after/samples-${width}.json`,JSON.stringify(results,null,2));
   });
 }
 
-test('unified controller pauses, resumes, persists and never duplicates the Nexus loop', async ({ page }) => {
+test('motion starts automatically, ignores the old pause key and never duplicates the Nexus loop', async ({ page }) => {
   const errors=[];
   page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.addInitScript(() => localStorage.setItem('edulab-motion', 'paused'));
   await page.goto('/');
   const api=await page.evaluate(async()=>Object.keys(await import('/src/modules/motion-controller.js')));
-  expect(api).toEqual(expect.arrayContaining(['pauseMotion','resumeMotion','toggleMotion','getMotionState']));
+  expect(api).toEqual(expect.arrayContaining(['initializeMotionSystem','pauseMotion','resumeMotion','toggleMotion','getMotionState']));
   const graphic=page.locator('.lab-card[data-lab="chemlab"] .molecule-drift');
   await graphic.evaluate(element => element.closest('.lab-card').scrollIntoView({block:'center',behavior:'instant'}));
   await expect(graphic).toHaveCSS('animation-play-state','running');
-  await expect(page.locator('#motion-toggle')).toHaveText(/Tạm dừng chuyển động/);
-  await page.locator('#motion-toggle').click();
+  await expect(page.locator('#motion-toggle')).toHaveCount(0);
+  await expect(page.locator('html')).toHaveAttribute('data-motion','on');
+  const preference=page.locator('#reduce-motion-setting');
+  await preference.check();
   await expect(graphic).toHaveCSS('animation-play-state','paused');
   await expect(page.locator('html')).toHaveAttribute('data-motion','off');
-  await expect(page.locator('#motion-toggle')).toHaveAttribute('title','Tiếp tục chuyển động trang trí');
-  expect(await page.evaluate(()=>localStorage.getItem('edulab-motion'))).toBe('paused');
+  expect(await page.evaluate(()=>localStorage.getItem('edulab-reduce-motion'))).toBe('true');
   expect(await page.locator('#kham-pha-lab').evaluate(section => section.getAnimations({subtree:true}).filter(animation => animation.effect?.target?.matches('.ambient')).every(animation => animation.playState === 'paused'))).toBe(true);
   const paused=await graphic.evaluate(read);
   await page.waitForTimeout(350);
   expect(await graphic.evaluate(read)).toEqual(paused);
-  await page.locator('#motion-toggle').click();
+  await preference.uncheck();
+  await graphic.evaluate(element => element.closest('.lab-card').scrollIntoView({block:'center',behavior:'instant'}));
   await expect(graphic).toHaveCSS('animation-play-state','running');
-  expect(await page.evaluate(()=>localStorage.getItem('edulab-motion'))).toBe('running');
+  expect(await page.evaluate(()=>localStorage.getItem('edulab-reduce-motion'))).toBe('false');
   await page.locator('#faq').scrollIntoViewIfNeeded();
   await expect(graphic).toHaveCSS('animation-play-state','paused');
   await graphic.evaluate(element => element.closest('.lab-card').scrollIntoView({block:'center',behavior:'instant'}));
@@ -93,46 +96,108 @@ test('unified controller pauses, resumes, persists and never duplicates the Nexu
   await page.waitForTimeout(500);
   await expect(node).not.toHaveAttribute('data-canvas-point',movingPoint);
   for(let i=0;i<5;i++) {
-    await page.locator('#motion-toggle').click();
+    await page.evaluate(async()=>{(await import('/src/modules/motion-controller.js')).pauseMotion();});
     const stopped=await node.getAttribute('data-canvas-point');
     await page.waitForTimeout(250);
     await expect(node).toHaveAttribute('data-canvas-point',stopped);
-    await page.locator('#motion-toggle').click();
+    await page.evaluate(async()=>{(await import('/src/modules/motion-controller.js')).resumeMotion();});
     await page.waitForTimeout(250);
     await expect(node).not.toHaveAttribute('data-canvas-point',stopped);
     await expect(page.locator('.nexus-canvas')).toHaveCount(1);
   }
   await page.locator('.nexus-node[data-lab="mathlab"]').click();
   await expect(page.locator('#nexus-hud-name')).toHaveText('MathLab');
-  await page.locator('#motion-toggle').click();
+  await preference.check();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-motion','off');
-  await expect(page.locator('#motion-toggle')).toHaveText(/Tiếp tục chuyển động/);
-  await page.locator('#motion-toggle').click();
+  await expect(preference).toBeChecked();
+  await preference.uncheck();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-motion','on');
-  await page.setViewportSize({width:390,height:844});
-  await page.locator('#motion-toggle').click();
-  await expect(page.locator('#motion-toggle')).toHaveAttribute('aria-pressed','true');
-  await page.locator('#motion-toggle').click();
   expect(errors).toEqual([]);
 });
 
-test('reduced motion defaults to pause but explicit Resume remains available', async ({ page }) => {
+test('reduced motion pauses decoration without disabling functional controls', async ({ page }) => {
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/');
-  await page.evaluate(()=>localStorage.removeItem('edulab-motion'));
-  await page.reload();
-  const toggle=page.locator('#motion-toggle');
   const graphic=page.locator('.lab-card[data-lab="chemlab"] .molecule-drift');
   await graphic.evaluate(element => element.closest('.lab-card').scrollIntoView({block:'center',behavior:'instant'}));
-  await expect(toggle).toBeEnabled();
-  await expect(toggle).toHaveText(/Tiếp tục chuyển động/);
   await expect(graphic).toHaveCSS('animation-play-state','paused');
-  await toggle.click();
-  await expect(toggle).toHaveText(/Tạm dừng chuyển động/);
-  await expect(graphic).toHaveCSS('animation-play-state','running');
+  await expect(page.locator('html')).toHaveAttribute('data-motion','off');
+  await page.locator('.planet-side-left').click();
+  await expect(page.locator('.planet-title')).toHaveText('VENUS');
+});
+
+test('legacy running remains an explicit opt-in when the visible control is removed', async ({ page }) => {
+  const errors=[];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => {
+    localStorage.setItem('edulab-motion','running');
+    localStorage.setItem('edulab-theme','light');
+  });
+  await page.goto('/');
+  await expect(page.locator('#motion-toggle')).toHaveCount(0);
+  await expect(page.locator('html')).toHaveAttribute('data-motion','on');
+  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+  expect(await page.evaluate(()=>localStorage.getItem('edulab-reduce-motion'))).toBe('false');
+  const video=page.locator('video[data-planet="earth"]');
+  await expect(video).toHaveClass(/is-playing/);
+  await expect(video).toHaveJSProperty('paused',false);
+  for (const selector of ['.molecule-drift','.preview-visual-stage .orbit-electron','.philosophy-geo .motif-orbit','.journey-orbit','.eco-hub-wrap .network-flow','.final-cta-box .motif-orbit']) {
+    const artwork=page.locator(selector).first();
+    await artwork.evaluate(element => element.scrollIntoView({block:'center',behavior:'instant'}));
+    await expect(artwork).toHaveCSS('animation-play-state','running');
+  }
+  await page.locator('#nexus-viewport').scrollIntoViewIfNeeded();
+  const node=page.locator('.nexus-node[data-lab="mathlab"]');
+  await expect(page.locator('.nexus-canvas')).toBeVisible();
+  await expect.poll(()=>node.getAttribute('data-canvas-point')).toBeTruthy();
+  const point=await node.getAttribute('data-canvas-point');
+  await page.waitForTimeout(500);
+  await expect(node).not.toHaveAttribute('data-canvas-point',point);
+  await page.locator('#top').scrollIntoViewIfNeeded();
+  await page.locator('#theme-toggle').click();
+  await expect(page.locator('html')).toHaveAttribute('data-motion','on');
+  await page.locator('.planet-side-left').click();
+  await expect(page.locator('video[data-planet="venus"]')).toHaveClass(/is-playing/);
+  await page.locator('.planet-side-right').click();
+  await expect(page.locator('video[data-planet="mars"]')).toHaveClass(/is-playing/);
+  await page.locator('.planet-side-left').click();
+  await expect(video).toHaveClass(/is-playing/);
+  for (const [width,height] of [[390,844],[320,700]]) {
+    await page.setViewportSize({width,height});
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-motion','on');
+    await expect(page.locator('video[data-planet="earth"]')).toHaveClass(/is-playing/);
+  }
+  await page.evaluate(()=>localStorage.setItem('edulab-reduce-motion','true'));
   await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-motion','off');
+  await expect(page.locator('#reduce-motion-setting')).toBeChecked();
+  await expect(page.locator('video[data-planet="earth"]')).toHaveJSProperty('paused',true);
+  expect(errors).toEqual([]);
+});
+
+test('Hero planets keep moving for ten seconds without a Play control', async ({ page }) => {
+  test.setTimeout(30000);
+  await page.setViewportSize({width:1440,height:900});
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await expect(page.locator('#motion-toggle')).toHaveCount(0);
+  const video=page.locator('video[data-planet="earth"]');
+  await expect(video).toHaveClass(/is-playing/);
+  await expect(video).toHaveCSS('opacity','1');
+  expect(await video.evaluate(element=>({rate:element.playbackRate,width:element.videoWidth,height:element.videoHeight}))).toEqual({rate:1,width:1276,height:720});
+  const sides=page.locator('.planet-side img.is-shown');
+  await expect(sides).toHaveCount(2);
+  const initial=await sides.evaluateAll(elements=>elements.map(element=>getComputedStyle(element).transform));
+  const initialTime=await video.evaluate(element=>element.currentTime);
+  await page.waitForTimeout(5000);
+  expect(await sides.evaluateAll(elements=>elements.map(element=>getComputedStyle(element).transform))).not.toEqual(initial);
+  expect(await video.evaluate(element=>element.currentTime)).not.toBe(initialTime);
+  await page.waitForTimeout(5000);
+  await expect(video).toHaveJSProperty('paused',false);
   await expect(page.locator('html')).toHaveAttribute('data-motion','on');
 });
 
@@ -150,7 +215,6 @@ test('Nexus renders distinct frames and maintains one canvas through pause and s
   await page.locator('.nexus-node[data-lab="itlab"]').click();
   await expect(page.locator('#nexus-hud-name')).toHaveText('ITLab');
   await page.locator('#nexus-reset-btn').click();
-  for(let i=0;i<4;i++)await page.locator('#motion-toggle').click();
   await expect(canvas).toHaveCount(1);
   const point=await page.locator('.nexus-node[data-lab="itlab"]').getAttribute('data-canvas-point');
   await page.waitForTimeout(500);

@@ -1,5 +1,5 @@
 import { ORBIT_MOTIF } from '../data/artwork.js';
-import { bindMotionToggle, getMotionState } from './motion-controller.js';
+import { bindReducedMotionPreference, getMotionState } from './motion-controller.js';
 
 export function initLivingUniverse() {
   const root = document.documentElement;
@@ -11,12 +11,7 @@ export function initLivingUniverse() {
   atmosphere.innerHTML = `<svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice"><g class="ambient star-drift">${Array.from({length:32}, (_,i) => `<circle cx="${(i*397)%1440}" cy="${(i*173)%1000}" r="${i%4 === 0 ? 1.8 : .9}"/>`).join('')}</g><g class="ambient star-drift far">${Array.from({length:18}, (_,i) => `<circle cx="${(i*233+87)%1440}" cy="${(i*317+67)%1000}" r="1"/>`).join('')}</g><ellipse cx="1180" cy="680" rx="640" ry="250" transform="rotate(-30 1180 680)"/></svg>`;
   document.body.prepend(atmosphere);
 
-  const toggle = document.createElement('button');
-  toggle.id = 'motion-toggle';
-  toggle.className = 'motion-toggle';
-  toggle.type = 'button';
-  document.getElementById('theme-toggle')?.before(toggle);
-  const unbindToggle = bindMotionToggle(toggle);
+  const unbindPreference = bindReducedMotionPreference(document.getElementById('reduce-motion-setting'));
 
   document.querySelectorAll('.philosophy-geo').forEach((element, index) => {
     element.innerHTML = index === 0 ? ORBIT_MOTIF : index === 1
@@ -73,11 +68,10 @@ export function initLivingUniverse() {
   sync();
   return () => {
     events.abort();
-    unbindToggle();
+    unbindPreference();
     observer.disconnect();
     activeObserver.disconnect();
     cancelAnimationFrame(pointerFrame);
     atmosphere.remove();
-    toggle.remove();
   };
 }

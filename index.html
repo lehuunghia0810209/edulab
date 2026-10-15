@@ -13,6 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="./assets/edulab-logo.png">
   <link rel="icon" type="image/png" href="./assets/edulab-logo.png">
+  <link rel="preload" as="image" href="./assets/planet-earth.webp" fetchpriority="high">
 
   <!-- Google Fonts: Prata, Space Grotesk & Be Vietnam Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,11 +30,11 @@
         }
       } catch (e) {}
       try {
-        var savedMotion = localStorage.getItem('edulab-motion');
+        var savedMotion = localStorage.getItem('edulab-reduce-motion');
+        var legacyMotion = localStorage.getItem('edulab-motion');
         var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var motionOn = savedMotion === 'running' || (savedMotion !== 'paused' && !reducedMotion);
+        var motionOn = savedMotion === 'false' || (savedMotion === null && (legacyMotion === 'running' || !reducedMotion));
         document.documentElement.setAttribute('data-motion', motionOn ? 'on' : 'off');
-        document.documentElement.setAttribute('data-motion-preference', savedMotion || 'auto');
       } catch (e) {}
       try {
         if (motionOn) {
@@ -125,12 +126,12 @@
     <!-- 2. CINEMATIC PLANET HERO -->
     <section class="planet-hero" id="top" aria-labelledby="hero-heading" data-featured="earth">
       <div class="planet-sky" aria-hidden="true">
-        <div class="planet-poster is-active" data-planet="earth" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_508c64b8-a31e-4290-bdfc-1187df70e0a6.png')"></div>
-        <div class="planet-poster" data-planet="venus" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png')"></div>
-        <div class="planet-poster" data-planet="mars" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png')"></div>
-        <video data-planet="earth" muted loop playsinline preload="metadata" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_3ffb4889-c520-432d-8458-038009eb40df.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_508c64b8-a31e-4290-bdfc-1187df70e0a6.png" aria-hidden="true"></video>
-        <video data-planet="venus" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png" aria-hidden="true"></video>
-        <video data-planet="mars" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png" aria-hidden="true"></video>
+        <div class="planet-poster is-active" data-planet="earth" style="background-image:url('./assets/planet-earth.webp')"></div>
+        <div class="planet-poster" data-planet="venus" style="background-image:url('./assets/planet-venus.webp')"></div>
+        <div class="planet-poster" data-planet="mars" style="background-image:url('./assets/planet-mars.webp')"></div>
+        <video data-planet="earth" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_3ffb4889-c520-432d-8458-038009eb40df.mp4" poster="./assets/planet-earth.webp" aria-hidden="true"></video>
+        <video data-planet="venus" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4" poster="./assets/planet-venus.webp" aria-hidden="true"></video>
+        <video data-planet="mars" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4" poster="./assets/planet-mars.webp" aria-hidden="true"></video>
       </div>
       <div class="planet-shade" aria-hidden="true"></div>
       <div class="planet-hero-content">
@@ -703,6 +704,7 @@
 
       <div class="footer-bottom">
         <p>© <span id="current-year">2026</span> EduLab. Education Laboratory.</p>
+        <label class="reduce-motion-setting"><input id="reduce-motion-setting" type="checkbox"> Giảm chuyển động trang trí</label>
         <p>Khám phá. Tương tác. Thấu hiểu.</p>
       </div>
     </div>

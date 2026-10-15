@@ -1,22 +1,29 @@
-const STORAGE_KEY = 'edulab-motion';
+const STORAGE_KEY = 'edulab-reduce-motion';
+const LEGACY_KEY = 'edulab-motion';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let preference = readPreference();
+let initialized = false;
 
 function readPreference() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved === 'running' || saved === 'paused' ? saved : 'auto';
+    if (saved === 'true') return 'reduce';
+    if (saved === 'false') return 'allow';
+    return saved === null && localStorage.getItem(LEGACY_KEY) === 'running' ? 'allow' : 'auto';
   } catch {
     return 'auto';
   }
 }
 
 function persist() {
-  try { localStorage.setItem(STORAGE_KEY, preference); } catch {}
+  try {
+    if (preference === 'auto') localStorage.removeItem(STORAGE_KEY);
+    else localStorage.setItem(STORAGE_KEY, preference === 'reduce' ? 'true' : 'false');
+  } catch {}
 }
 
 export function getMotionState() {
-  const userPaused = preference === 'paused';
+  const userPaused = preference === 'reduce';
   const systemPaused = preference === 'auto' && reducedMotion.matches;
   return {
     preference,
@@ -30,19 +37,18 @@ export function getMotionState() {
 function publish(source) {
   const state = getMotionState();
   document.documentElement.dataset.motion = state.canAnimate ? 'on' : 'off';
-  document.documentElement.dataset.motionPreference = state.preference;
   document.dispatchEvent(new CustomEvent('edulab:motion-change', { detail: { ...state, source } }));
   return state;
 }
 
 export function pauseMotion() {
-  preference = 'paused';
+  preference = 'reduce';
   persist();
   return publish('user');
 }
 
 export function resumeMotion() {
-  preference = 'running';
+  preference = 'allow';
   persist();
   return publish('user');
 }
@@ -51,24 +57,27 @@ export function toggleMotion() {
   return getMotionState().canAnimate ? pauseMotion() : resumeMotion();
 }
 
-export function bindMotionToggle(button) {
+export function initializeMotionSystem() {
+  if (initialized) return getMotionState();
+  initialized = true;
+  persist();
+  reducedMotion.addEventListener('change', onSystemPreferenceChange);
+  return publish('init');
+}
+
+export function bindReducedMotionPreference(input) {
+  if (!input) return () => {};
   const events = new AbortController();
   function render() {
-    const running = getMotionState().canAnimate;
-    button.disabled = false;
-    button.innerHTML = `<span aria-hidden="true">${running ? 'Ⅱ' : '▶'}</span><span>${running ? 'Tạm dừng chuyển động' : 'Tiếp tục chuyển động'}</span>`;
-    button.setAttribute('aria-label', running ? 'Tạm dừng chuyển động' : 'Tiếp tục chuyển động');
-    button.setAttribute('aria-pressed', String(!running));
-    button.title = running ? 'Tạm dừng chuyển động trang trí' : 'Tiếp tục chuyển động trang trí';
-    button.dataset.state = running ? 'running' : 'paused';
+    input.checked = !getMotionState().canAnimate;
+    input.title = reducedMotion.matches ? 'Thiết bị đang yêu cầu giảm chuyển động' : 'Giảm chuyển động trang trí';
   }
-  button.addEventListener('click', toggleMotion, { signal: events.signal });
+  input.addEventListener('change', () => input.checked ? pauseMotion() : resumeMotion(), { signal: events.signal });
   document.addEventListener('edulab:motion-change', render, { signal: events.signal });
   render();
   return () => events.abort();
 }
 
-reducedMotion.addEventListener('change', () => {
+function onSystemPreferenceChange() {
   if (preference === 'auto') publish('system');
-});
-publish('init');
+}

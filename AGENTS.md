@@ -1,6 +1,16 @@
 
 # EDULAB — AI DEVELOPMENT RULES v1.0
 
+## EDU LAB HOME — CURRENT PROJECT CONTEXT
+
+- Current baseline: **EduLab Home V5 Refined**, a static Vite portal for five independently deployed products: ChemLab, PhysicsLab, MathLab, BioLab and ITLab. It does not contain their source code.
+- Read `docs/PROJECT_CONTEXT.md` and `README.md` before modifying feature code. `src/main.js` is the application entry point.
+- Keep the Earth/Venus/Mars hero, local poster fallbacks in `public/assets/`, the official logo, and the motion lifecycle intact unless the task explicitly changes them. Do not add gradients or invent Lab URLs.
+- The motion controller is button-independent. It initializes once through `initializeMotionSystem()` after feature modules attach listeners.
+- Motion preference has three states: `auto`, `reduce`, `allow`. `edulab-motion=paused` is obsolete and must not freeze the site; legacy `running` migrates to explicit allow; `edulab-reduce-motion=true` remains an explicit accessibility choice.
+- When motion-related code changes, test system reduced motion, legacy running/paused, explicit allow/reduce, reload, planet switching, section visibility and the Nexus loop. Never report PASS without real browser evidence.
+- `artifacts/`, `dist/`, test reports and caches are generated and ignored. Do not treat them as source or fixtures; regenerate them locally when needed.
+
 ## 1. ROLE & MISSION
 
 Act as a Principal Software Architect, Senior Full-Stack

@@ -1,8 +1,8 @@
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const destination='artifacts/motion-5';
-const url=process.env.QA_URL||'http://127.0.0.1:5188';
+const destination='artifacts/v5-refined/after';
+const url=process.env.QA_URL||'http://127.0.0.1:4205';
 await mkdir(destination,{recursive:true});
 const browser=await chromium.launch({channel:'chrome'});
 const scenes=[['hero','#top'],['discovery','.lab-card[data-lab="chemlab"]'],['nexus','#nexus-viewport'],['explorer','#explorer-preview-panel'],['ecosystem','.eco-hub-wrap']];
@@ -18,15 +18,15 @@ try {
     await page.locator(selector).evaluate(element=>element.scrollIntoView({block:'center',behavior:'instant'}));
     await page.mouse.move(0,0);
     await page.waitForTimeout(1800);
-    for(const [time,delay] of [[0,0],[2,2000],[5,3000],[8,3000]]) {
+    for(const [time,delay] of [[0,0],[2,2000],[5,3000],[10,5000]]) {
       if(delay)await page.waitForTimeout(delay);
       await page.screenshot({path:`${destination}/${name}-t${time}.png`});
     }
     const video=page.video();
     await context.close();
     await video.saveAs(`${destination}/${name}-motion.webm`);
-    evidence.push({name,stationaryObservationSeconds:8,errors});
-    console.log(`Recorded ${name}: 8 seconds without input; runtime errors: ${errors.length}`);
+    evidence.push({name,stationaryObservationSeconds:10,errors});
+    console.log(`Recorded ${name}: 10 seconds without input; runtime errors: ${errors.length}`);
   }
   const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'no-preference',recordVideo:{dir:destination,size:{width:1440,height:900}}});
   const page=await context.newPage();

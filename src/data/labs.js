@@ -3,7 +3,7 @@ export const LABS = [
     id: "chemlab",
     name: "ChemLab",
     subject: "Hóa học",
-    url: import.meta.env.VITE_CHEMLAB_URL || "",
+    url: import.meta.env.VITE_CHEMLAB_URL || "https://chemlab-edulab.pages.dev/",
     description: "Khám phá hóa học qua tương tác.",
     icon: "flask",
     category: "science"
@@ -12,7 +12,7 @@ export const LABS = [
     id: "physicslab",
     name: "PhysicsLab",
     subject: "Vật lý",
-    url: import.meta.env.VITE_PHYSICSLAB_URL || "",
+    url: import.meta.env.VITE_PHYSICSLAB_URL || "https://physicslab-edulab.pages.dev/",
     description: "Trực quan hóa các hiện tượng vật lý.",
     icon: "atom",
     category: "science"
@@ -21,7 +21,7 @@ export const LABS = [
     id: "mathlab",
     name: "MathLab",
     subject: "Toán học",
-    url: import.meta.env.VITE_MATHLAB_URL || "",
+    url: import.meta.env.VITE_MATHLAB_URL || "https://mathlab-edulab.pages.dev/",
     description: "Khám phá toán học bằng hình ảnh.",
     icon: "function",
     category: "logic"

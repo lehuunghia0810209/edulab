@@ -53,7 +53,7 @@ try {
       note: 'Event Timing samples are not field INP; zero means no event exceeded the observer threshold. rAF intervals are scheduling measurements, not hardware GPU benchmarks.', errors });
     await page.close();
   }
-  await mkdir('artifacts/performance-5', { recursive: true });
-  await writeFile('artifacts/performance-5/measurements.json', JSON.stringify(results, null, 2));
+  await mkdir('artifacts/v5-refined/performance', { recursive: true });
+  await writeFile('artifacts/v5-refined/performance/measurements.json', JSON.stringify(results, null, 2));
   console.log(JSON.stringify(results, null, 2));
 } finally { await browser.close(); }

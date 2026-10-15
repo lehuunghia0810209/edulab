@@ -182,6 +182,16 @@ html, body { overflow-x: clip; }
 .planet-side:active { transform: translateY(-50%) scale(.98); }
 .planet-side img { display: none; width: 100%; height: 100%; object-fit: contain; }
 .planet-side img.is-shown { display: block; }
+.planet-side-left img.is-shown { animation: planet-float-left 7s ease-in-out infinite alternate; }
+.planet-side-right img.is-shown { animation: planet-float-right 8.5s ease-in-out -3s infinite alternate; }
+@keyframes planet-float-left {
+  from { transform: translate3d(-8px, 10px, 0) scale(.99); }
+  to { transform: translate3d(12px, -9px, 0) scale(1.025); }
+}
+@keyframes planet-float-right {
+  from { transform: translate3d(10px, -8px, 0) scale(1.02); }
+  to { transform: translate3d(-11px, 11px, 0) scale(.99); }
+}
 .planet-side:focus-visible { outline: 3px solid #79dce8; outline-offset: 5px; }
 .planet-side-label {
   position: absolute;

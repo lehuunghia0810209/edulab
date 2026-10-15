@@ -95,6 +95,8 @@ export function initPlanetHero() {
   }
 
   videos.forEach(video => {
+    video.defaultPlaybackRate = 1;
+    video.playbackRate = 1;
     video.addEventListener('playing', () => {
       if (video.dataset.planet === featured && visible && !document.hidden && getMotionState().canAnimate) {
         video.classList.add('is-playing');
