@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduLab — Education Laboratory | Khám phá tri thức tương tác</title>
+  <meta name="description" content="EduLab (Education Laboratory) — Cổng kết nối hệ sinh thái 5 không gian học tập tương tác độc lập: Toán học, Vật lý, Hóa học, Sinh học và Tin học.">
+  <meta name="theme-color" content="#07161D">
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:title" content="EduLab — Education Laboratory | Khám phá tri thức tương tác">
+  <meta property="og:description" content="Biến kiến thức thành trải nghiệm. Khám phá thế giới Toán học, Vật lý, Hóa học, Sinh học và Tin học qua những không gian học tập được phát triển độc lập.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./assets/edulab-logo.png">
+  <link rel="icon" type="image/png" href="./assets/edulab-logo.png">
+
+  <!-- Google Fonts: Prata, Space Grotesk & Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Prata&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Blocking Entrance Animation Guard (No flash of unstyled state, respects reduced motion) -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('edulab-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (e) {}
+      try {
+        var savedMotion = localStorage.getItem('edulab-motion');
+        var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var motionOn = savedMotion === 'running' || (savedMotion !== 'paused' && !reducedMotion);
+        document.documentElement.setAttribute('data-motion', motionOn ? 'on' : 'off');
+        document.documentElement.setAttribute('data-motion-preference', savedMotion || 'auto');
+      } catch (e) {}
+      try {
+        if (motionOn) {
+          document.documentElement.classList.add('anim');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+
+</head>
+<body>
+
+  <!-- Skip to Content for Keyboard Users -->
+  <a href="#main-content" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Top Scroll Progress Line -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- 1. STICKY HEADER & NAVIGATION -->
+  <header class="site-header" id="site-header" data-menu-open="false">
+    <div class="container header-inner">
+      <a href="#top" class="brand-link" aria-label="EduLab — Education Laboratory, trở về đầu trang">
+        <div class="brand-logo-wrap">
+          <img
+            src="./assets/edulab-logo.png"
+            alt="Logo chính thức của EduLab"
+            class="brand-logo-img"
+            width="40"
+            height="40"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+          >
+          <span class="brand-logo-fallback" aria-hidden="true">EL</span>
+        </div>
+        <div class="brand-wordmark">
+          <span class="brand-name">Edu<span>Lab</span></span>
+          <span class="brand-sub">Education Laboratory</span>
+        </div>
+      </a>
+
+      <nav aria-label="Điều hướng chính">
+        <ul class="nav-menu" id="primary-nav">
+          <li><a href="#top" class="nav-link is-active" data-nav-section="top">Trang chủ</a></li>
+          <li><a href="#kham-pha-lab" class="nav-link" data-nav-section="kham-pha-lab">Khám phá Lab</a></li>
+          <li><a href="#ve-edulab" class="nav-link" data-nav-section="ve-edulab">Về EduLab</a></li>
+          <li><a href="#he-sinh-thai" class="nav-link" data-nav-section="he-sinh-thai">Hệ sinh thái</a></li>
+          <li><a href="#faq" class="nav-link" data-nav-section="faq">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button
+          type="button"
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Chuyển đổi giao diện Sáng / Tối"
+          title="Chuyển đổi giao diện Sáng / Tối"
+        >
+          <!-- Sun Icon -->
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <!-- Moon Icon -->
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="#kham-pha-lab" class="btn btn-primary header-cta">Khám phá ngay</a>
+
+        <button
+          type="button"
+          class="burger-btn"
+          id="burger-btn"
+          aria-label="Mở menu điều hướng"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 2. CINEMATIC PLANET HERO -->
+    <section class="planet-hero" id="top" aria-labelledby="hero-heading" data-featured="earth">
+      <div class="planet-sky" aria-hidden="true">
+        <div class="planet-poster is-active" data-planet="earth" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_508c64b8-a31e-4290-bdfc-1187df70e0a6.png')"></div>
+        <div class="planet-poster" data-planet="venus" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png')"></div>
+        <div class="planet-poster" data-planet="mars" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png')"></div>
+        <video data-planet="earth" muted loop playsinline preload="metadata" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_3ffb4889-c520-432d-8458-038009eb40df.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_508c64b8-a31e-4290-bdfc-1187df70e0a6.png" aria-hidden="true"></video>
+        <video data-planet="venus" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png" aria-hidden="true"></video>
+        <video data-planet="mars" muted loop playsinline preload="none" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4" poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png" aria-hidden="true"></video>
+      </div>
+      <div class="planet-shade" aria-hidden="true"></div>
+      <div class="planet-hero-content">
+        <p class="planet-eyebrow"><span class="ent-mask"><span class="ent-line">EDULAB / EXPLORE THE UNIVERSE</span></span></p>
+        <h1 class="planet-title" id="hero-heading" aria-live="polite" aria-atomic="true"><span class="ent-mask"><span class="ent-line" id="planet-title-text">EARTH</span></span></h1>
+        <span class="planet-rule" aria-hidden="true"></span>
+        <p class="planet-lede" id="planet-lede">Từ hành tinh xanh của chúng ta, bắt đầu hành trình khám phá khoa học qua năm không gian học tập tương tác của EduLab.</p>
+        <div class="planet-choice-row">
+          <button class="planet-side planet-side-left" type="button" data-slot="left" data-planet="venus" aria-label="Khám phá Sao Kim">
+          <img data-planet="earth" class="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202005_3346cc4d-ec3b-44ab-825c-b18e49f5021a.png" alt="" width="2048" height="2048" decoding="async">
+          <img data-planet="venus" class="is-shown" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png" alt="" width="2048" height="2048" decoding="async">
+          <img data-planet="mars" class="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png" alt="" width="2048" height="2048" decoding="async">
+          </button>
+          <span class="planet-side-label planet-side-label-left" id="planet-left-label">VENUS</span>
+          <a class="planet-primary-cta" href="#kham-pha-lab">KHÁM PHÁ CÁC LAB <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+          <span class="planet-side-label planet-side-label-right" id="planet-right-label">MARS</span>
+          <button class="planet-side planet-side-right" type="button" data-slot="right" data-planet="mars" aria-label="Khám phá Sao Hỏa">
+          <img data-planet="earth" class="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202005_3346cc4d-ec3b-44ab-825c-b18e49f5021a.png" alt="" width="2048" height="2048" decoding="async">
+          <img data-planet="venus" class="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png" alt="" width="2048" height="2048" decoding="async">
+          <img data-planet="mars" class="is-shown" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png" alt="" width="2048" height="2048" decoding="async">
+          </button>
+        </div>
+      </div>
+      <a class="planet-scroll" href="#kham-pha-lab" aria-label="Cuộn đến phần khám phá các Lab"><svg viewBox="0 0 26 33" fill="none" aria-hidden="true"><path d="M13 1.5V31.5M1.9 20.4 13 31.5l11.1-11.1" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/></svg></a>
+    </section>
+
+    <!-- 3. LAB DISCOVERY SECTION (THE FIVE LABS) -->
+    <section class="section reveal-section" id="kham-pha-lab" aria-labelledby="discovery-heading">
+      <div class="container">
+        <div class="section-header-row">
+          <div>
+            <span class="eyebrow">EXPLORE / THE LABORATORIES</span>
+            <h2 class="section-title" id="discovery-heading">Chọn lĩnh vực. Bắt đầu khám phá.</h2>
+          </div>
+          <p class="section-desc">
+            Mỗi phòng Lab là một không gian học tập độc lập, được kết nối qua EduLab.
+          </p>
+        </div>
+
+        <div class="labs-bento-grid" id="labs-discovery-grid">
+          <article class="lab-card">
+            <div class="lab-card-top"><span class="lab-index-badge">01</span><span class="lab-category-tag">Khoa học tự nhiên</span></div>
+            <div class="lab-card-body"><span class="lab-subject-vn">Hóa học</span><h3 class="lab-name-en">ChemLab</h3><p class="lab-desc-text">Khám phá hóa học qua tương tác.</p></div>
+            <div class="lab-card-footer lab-card-footer-static"><span data-lab-url="VITE_CHEMLAB_URL">ChemLab — Chưa cập nhật liên kết</span></div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card-top"><span class="lab-index-badge">02</span><span class="lab-category-tag">Khoa học tự nhiên</span></div>
+            <div class="lab-card-body"><span class="lab-subject-vn">Vật lý</span><h3 class="lab-name-en">PhysicsLab</h3><p class="lab-desc-text">Trực quan hóa các hiện tượng vật lý.</p></div>
+            <div class="lab-card-footer lab-card-footer-static"><span data-lab-url="VITE_PHYSICSLAB_URL">PhysicsLab — Chưa cập nhật liên kết</span></div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card-top"><span class="lab-index-badge">03</span><span class="lab-category-tag">Toán học &amp; Công nghệ</span></div>
+            <div class="lab-card-body"><span class="lab-subject-vn">Toán học</span><h3 class="lab-name-en">MathLab</h3><p class="lab-desc-text">Khám phá toán học bằng hình ảnh.</p></div>
+            <div class="lab-card-footer lab-card-footer-static"><span data-lab-url="VITE_MATHLAB_URL">MathLab — Chưa cập nhật liên kết</span></div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card-top"><span class="lab-index-badge">04</span><span class="lab-category-tag">Khoa học tự nhiên</span></div>
+            <div class="lab-card-body"><span class="lab-subject-vn">Sinh học</span><h3 class="lab-name-en">BioLab</h3><p class="lab-desc-text">Tìm hiểu thế giới sự sống.</p></div>
+            <div class="lab-card-footer lab-card-footer-static"><span data-lab-url="VITE_BIOLAB_URL">BioLab — Chưa cập nhật liên kết</span></div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card-top"><span class="lab-index-badge">05</span><span class="lab-category-tag">Toán học &amp; Công nghệ</span></div>
+            <div class="lab-card-body"><span class="lab-subject-vn">Tin học</span><h3 class="lab-name-en">ITLab</h3><p class="lab-desc-text">Khám phá lập trình và công nghệ.</p></div>
+            <div class="lab-card-footer lab-card-footer-static"><span data-lab-url="VITE_ITLAB_URL">ITLab — Chưa cập nhật liên kết</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE KNOWLEDGE NEXUS -->
+    <section class="section section-alt reveal-section nexus-section" id="nexus" aria-labelledby="nexus-heading">
+      <div class="container nexus-section-layout">
+        <div class="nexus-section-copy">
+          <span class="eyebrow">02 / KNOWLEDGE GALAXY</span>
+          <h2 class="section-title" id="nexus-heading">Tri thức luôn<br>trong chuyển động.</h2>
+          <p class="section-desc">Chạm vào từng quỹ đạo để gặp gỡ năm phòng Lab độc lập. Mỗi lựa chọn mở ra một hướng khám phá mới.</p>
+          <a class="text-link" href="#bo-kham-pha">Xem bộ khám phá Lab <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="nexus-stage">
+          <div class="nexus-viewport" id="nexus-viewport" role="group" aria-label="Mô hình tương tác 5 phòng Lab của EduLab">
+            <div class="ambient nexus-ring nexus-ring-outer" aria-hidden="true"></div>
+            <div class="ambient nexus-ring nexus-ring-mid" aria-hidden="true"></div>
+            <div class="ambient nexus-ring nexus-ring-inner" aria-hidden="true"></div>
+
+            <!-- SVG Spokes Connecting Center to 5 Subject Nodes -->
+            <svg class="nexus-spokes" viewBox="0 0 500 500" fill="none" aria-hidden="true">
+              <line class="nexus-spoke-line" data-spoke="chemlab" x1="250" y1="250" x2="250" y2="55" />
+              <line class="nexus-spoke-line" data-spoke="physicslab" x1="250" y1="250" x2="435" y2="145" />
+              <line class="nexus-spoke-line" data-spoke="mathlab" x1="250" y1="250" x2="368" y2="405" />
+              <line class="nexus-spoke-line" data-spoke="biolab" x1="250" y1="250" x2="132" y2="405" />
+              <line class="nexus-spoke-line" data-spoke="itlab" x1="250" y1="250" x2="65" y2="145" />
+            </svg>
+
+            <!-- Center Hub Button -->
+            <button
+              type="button"
+              class="nexus-core"
+              id="nexus-core-btn"
+              aria-label="Đặt lại góc nhìn tổng quan EduLab Knowledge Nexus"
+            >
+              <div class="nexus-core-logo">
+                <img
+                  src="./assets/edulab-logo.png"
+                  alt=""
+                  width="48"
+                  height="48"
+                  onerror="this.style.display='none'; this.parentElement.textContent='EL';"
+                >
+              </div>
+              <span class="nexus-core-label">NEXUS CORE</span>
+            </button>
+
+            <!-- 5 Subject Nodes (Populated / bound via JS, authored in HTML for no-JS resilience) -->
+            <button type="button" class="nexus-node" data-lab="chemlab" aria-pressed="false" aria-label="Chọn ChemLab — Hóa học">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M9 3h6M10 3v6.5L4.5 19.2A1.5 1.5 0 0 0 5.8 21h12.4a1.5 1.5 0 0 0 1.3-1.8L14 9.5V3"/>
+                <path d="M7.5 14h9"/>
+              </svg>
+              <span class="nexus-node-title">ChemLab</span>
+              <span class="nexus-node-sub">Hóa học</span>
+            </button>
+
+            <button type="button" class="nexus-node" data-lab="physicslab" aria-pressed="false" aria-label="Chọn PhysicsLab — Vật lý">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="2.5"/>
+                <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(30 12 12)"/>
+                <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(-30 12 12)"/>
+              </svg>
+              <span class="nexus-node-title">PhysicsLab</span>
+              <span class="nexus-node-sub">Vật lý</span>
+            </button>
+
+            <button type="button" class="nexus-node" data-lab="mathlab" aria-pressed="false" aria-label="Chọn MathLab — Toán học">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 19h16M4 5v14"/>
+                <path d="M6 16c3-8 6-8 9-2s4 2 5-5"/>
+              </svg>
+              <span class="nexus-node-title">MathLab</span>
+              <span class="nexus-node-sub">Toán học</span>
+            </button>
+
+            <button type="button" class="nexus-node" data-lab="biolab" aria-pressed="false" aria-label="Chọn BioLab — Sinh học">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M7 3c0 5 10 5 10 10s-10 5-10 10"/>
+                <path d="M17 3c0 5-10 5-10 10s10 5 10 10"/>
+                <line x1="8.5" y1="6" x2="15.5" y2="6"/>
+                <line x1="8.5" y1="18" x2="15.5" y2="18"/>
+              </svg>
+              <span class="nexus-node-title">BioLab</span>
+              <span class="nexus-node-sub">Sinh học</span>
+            </button>
+
+            <button type="button" class="nexus-node" data-lab="itlab" aria-pressed="false" aria-label="Chọn ITLab — Tin học">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="8 6 2 12 8 18"/>
+                <polyline points="16 6 22 12 16 18"/>
+                <line x1="14" y1="4" x2="10" y2="20"/>
+              </svg>
+              <span class="nexus-node-title">ITLab</span>
+              <span class="nexus-node-sub">Tin học</span>
+            </button>
+          </div>
+
+          <!-- Interactive Readout Panel below 3D Nexus -->
+          <div class="nexus-hud" id="nexus-hud" aria-live="polite">
+            <div class="nexus-hud-info">
+              <div class="nexus-hud-top">
+                <span class="nexus-hud-code" id="nexus-hud-code">ATLAS CORE</span>
+                <span class="nexus-hud-name" id="nexus-hud-name">EduLab Knowledge Nexus</span>
+              </div>
+              <p class="nexus-hud-desc" id="nexus-hud-desc">
+                Chọn một quỹ đạo hoặc tên môn học để tìm hướng khám phá của bạn.
+              </p>
+            </div>
+            <div class="nexus-hud-actions">
+              <div id="nexus-hud-cta-slot">
+                <a href="#kham-pha-lab" class="btn btn-secondary">Danh sách Lab</a>
+              </div>
+              <button
+                type="button"
+                class="nexus-reset-btn"
+                id="nexus-reset-btn"
+                hidden
+                aria-label="Bỏ chọn Lab, quay về tổng quan Nexus"
+                title="Quay về tổng quan"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. INTERACTIVE LAB EXPLORER -->
+    <section class="section section-alt reveal-section" id="bo-kham-pha" aria-labelledby="explorer-heading">
+      <div class="container">
+        <div class="section-header-row">
+          <div>
+            <span class="eyebrow">INTERACTIVE DIRECTORY / LAB EXPLORER</span>
+            <h2 class="section-title" id="explorer-heading">Tra cứu & Xem trước không gian Lab.</h2>
+          </div>
+          <p class="section-desc">
+            Tìm kiếm theo tên môn học hoặc lọc theo nhóm lĩnh vực để khám phá định hướng của từng website Lab độc lập.
+          </p>
+        </div>
+
+        <div class="explorer-meta"><span>CHỌN MỘT HƯỚNG KHÁM PHÁ</span><span id="explorer-result-count" role="status">5 / 5 phòng Lab</span></div>
+        <!-- Search & Category Filter Bar -->
+        <div class="explorer-controls">
+          <div class="search-field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <label for="lab-search-input" class="sr-only">Tìm phòng Lab</label>
+            <input
+              type="search"
+              id="lab-search-input"
+              class="search-input"
+              placeholder="Tìm phòng Lab... (VD: Hóa học, MathLab, Tin học)"
+              autocomplete="off"
+            >
+            <button
+              type="button"
+              class="search-clear-btn"
+              id="search-clear-btn"
+              hidden
+              aria-label="Xóa từ khóa tìm kiếm"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div class="filter-pills" role="group" aria-label="Lọc theo nhóm lĩnh vực">
+            <button type="button" class="filter-btn is-active" data-filter="all">Tất cả (05)</button>
+            <button type="button" class="filter-btn" data-filter="science">Khoa học tự nhiên (03)</button>
+            <button type="button" class="filter-btn" data-filter="logic">Toán học &amp; Công nghệ (02)</button>
+          </div>
+        </div>
+
+        <div class="explorer-workspace">
+          <noscript><p class="no-js-note">Danh sách 5 phòng Lab và liên kết hiện có nằm ở phần Khám phá phía trên. Bật JavaScript để tìm kiếm và xem trước tương tác.</p></noscript>
+          <!-- Left Column: Filtered Subject Tabs -->
+          <div>
+            <div class="explorer-tab-list" id="explorer-tab-list" role="group" aria-label="Danh sách phòng Lab"></div>
+            <div class="explorer-empty" id="explorer-empty" hidden>
+              <p>Không tìm thấy phòng Lab phù hợp.</p>
+              <button type="button" class="btn btn-secondary" id="reset-search-btn">Đặt lại bộ lọc</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Detailed Subject Preview -->
+          <div class="explorer-preview-panel" id="explorer-preview-panel" aria-live="polite">
+            <div class="preview-header">
+              <div>
+                <span class="preview-number" id="preview-number">LAB 01 — HÓA HỌC</span>
+                <h3 class="preview-title" id="preview-title">ChemLab</h3>
+              </div>
+              <span class="lab-category-tag" id="preview-category">Khoa học tự nhiên</span>
+            </div>
+
+            <div class="preview-visual-stage" id="preview-visual-stage" aria-hidden="true"></div>
+
+            <p class="preview-description" id="preview-description">
+              Khám phá hóa học qua tương tác.
+            </p>
+
+            <div class="preview-pillars">
+              <div class="preview-pillar-item">
+                <span class="preview-pillar-label">Không gian</span>
+                <span class="preview-pillar-val">Chuyên biệt</span>
+              </div>
+              <div class="preview-pillar-item">
+                <span class="preview-pillar-label">Lĩnh vực</span>
+                <span class="preview-pillar-val" id="preview-subject-name">Hóa học</span>
+              </div>
+              <div class="preview-pillar-item">
+                <span class="preview-pillar-label">Phương thức</span>
+                <span class="preview-pillar-val">Trực quan &amp; Tương tác</span>
+              </div>
+            </div>
+
+            <div class="preview-footer">
+              <div class="lab-status-pill" id="preview-status-pill"></div>
+              <div id="preview-action-slot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. EDULAB PHILOSOPHY / ABOUT -->
+    <section class="section reveal-section" id="ve-edulab" aria-labelledby="philosophy-heading">
+      <div class="container">
+        <span class="eyebrow">PHILOSOPHY / EDUCATIONAL VISION</span>
+        <h2 class="section-title" id="philosophy-heading">Học không chỉ là ghi nhớ.</h2>
+        <p class="section-desc">
+          EduLab hướng đến trải nghiệm học tập nơi kiến thức có thể được quan sát, khám phá và hiểu sâu hơn.
+        </p>
+
+        <div class="philosophy-list">
+          <article class="philosophy-row">
+            <div class="philosophy-num" aria-hidden="true">01</div>
+            <h3 class="philosophy-heading">KHÁM PHÁ</h3>
+            <p class="philosophy-text">
+              Khơi gợi sự tò mò và tư duy chủ động. Mỗi khái niệm khoa học được đặt trong bối cảnh trực quan để người học tự đặt câu hỏi và tìm lời giải.
+            </p>
+            <div class="philosophy-geo" aria-hidden="true">
+              <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="40" cy="40" r="28"/>
+                <polygon points="40,18 54,54 26,54"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="philosophy-row">
+            <div class="philosophy-num" aria-hidden="true">02</div>
+            <h3 class="philosophy-heading">TƯƠNG TÁC</h3>
+            <p class="philosophy-text">
+              Tiếp cận kiến thức qua trải nghiệm trực quan. Thay vì chỉ đọc công thức tĩnh, người học quan sát sự biến đổi của mô hình và dữ liệu.
+            </p>
+            <div class="philosophy-geo" aria-hidden="true">
+              <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="16" y="16" width="32" height="32"/>
+                <rect x="32" y="32" width="32" height="32"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="philosophy-row">
+            <div class="philosophy-num" aria-hidden="true">03</div>
+            <h3 class="philosophy-heading">KẾT NỐI</h3>
+            <p class="philosophy-text">
+              Liên kết các lĩnh vực học tập trong một hệ sinh thái. Năm chuyên ngành vận hành độc lập nhưng cùng chia sẻ triết lý giáo dục hiện đại.
+            </p>
+            <div class="philosophy-geo" aria-hidden="true">
+              <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="40" cy="20" r="8"/>
+                <circle cx="20" cy="56" r="8"/>
+                <circle cx="60" cy="56" r="8"/>
+                <line x1="35" y1="27" x2="24" y2="49"/>
+                <line x1="45" y1="27" x2="56" y2="49"/>
+                <line x1="28" y1="56" x2="52" y2="56"/>
+              </svg>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. HOW EDULAB WORKS -->
+    <section class="section section-alt reveal-section" id="cach-hoat-dong" aria-labelledby="how-heading">
+      <div class="container">
+        <span class="eyebrow">NAVIGATION MODEL / ARCHITECTURE</span>
+        <h2 class="section-title" id="how-heading">Một cánh cửa. Nhiều hành trình học tập.</h2>
+        <p class="section-desc">
+          EduLab Home đóng vai trò là cổng điều hướng trung tâm, đưa bạn đến đúng chuyên trang học tập độc lập của từng bộ môn.
+        </p>
+
+        <div class="steps-timeline">
+          <div class="step-node">
+            <span class="step-num-tag">STEP 01</span>
+            <h3 class="step-title">Khám phá EduLab Home</h3>
+            <p class="step-desc">Tìm hiểu tổng quan về hệ sinh thái 5 bộ môn và định hướng trải nghiệm tại trang chủ trung tâm.</p>
+          </div>
+
+          <div class="step-node">
+            <span class="step-num-tag">STEP 02</span>
+            <h3 class="step-title">Chọn môn học phù hợp</h3>
+            <p class="step-desc">Lựa chọn giữa Hóa học, Vật lý, Toán học, Sinh học hoặc Tin học thông qua bộ khám phá trực quan.</p>
+          </div>
+
+          <div class="step-node">
+            <span class="step-num-tag">STEP 03</span>
+            <h3 class="step-title">Truy cập website Lab độc lập</h3>
+            <p class="step-desc">Mở trực tiếp website chuyên biệt của môn học đó với giao diện và công cụ được thiết kế riêng.</p>
+          </div>
+
+          <div class="step-node">
+            <span class="step-num-tag">STEP 04</span>
+            <h3 class="step-title">Tiếp tục trải nghiệm chuyên sâu</h3>
+            <p class="step-desc">Tương tác và khám phá kiến thức ngay bên trong không gian học tập riêng của phòng Lab đã chọn.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ECOSYSTEM OVERVIEW -->
+    <section class="section reveal-section" id="he-sinh-thai" aria-labelledby="ecosystem-heading">
+      <div class="container">
+        <span class="eyebrow">ECOSYSTEM ARCHITECTURE</span>
+        <h2 class="section-title" id="ecosystem-heading">Độc lập trong trải nghiệm. Kết nối trong tầm nhìn.</h2>
+        <p class="section-desc">
+          Năm không gian học tập độc lập. Một điểm khởi đầu để tìm thấy lĩnh vực bạn muốn khám phá sâu hơn.
+        </p>
+
+        <div class="eco-architecture">
+          <div class="eco-hub-wrap">
+            <div class="eco-central-box">
+              <span class="eco-central-tag">CENTRAL PORTAL</span>
+              <div class="eco-central-title">EduLab Home</div>
+            </div>
+            <div class="eco-trunk-line" aria-hidden="true"></div>
+            <div class="eco-branch-bar" aria-hidden="true"></div>
+
+            <div class="eco-nodes-row" id="eco-nodes-row" role="group" aria-label="Sơ đồ 5 nút phòng Lab trong hệ sinh thái">
+              <!-- Populated and synchronized with LABS config -->
+            </div>
+          </div>
+
+          <div class="eco-detail-bar" id="eco-detail-bar" aria-live="polite">
+            <div>
+              <span class="nexus-hud-code" id="eco-detail-code">01 / CHEMLAB</span>
+              <h3 class="nexus-hud-name" id="eco-detail-title" style="margin-top:4px;">ChemLab — Phòng Lab Hóa học</h3>
+              <p class="nexus-hud-desc" id="eco-detail-desc">Khám phá hóa học qua tương tác. Vận hành trên nền tảng web độc lập.</p>
+            </div>
+            <div id="eco-detail-action"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FAQ SECTION -->
+    <section class="section section-alt reveal-section" id="faq" aria-labelledby="faq-heading">
+      <div class="container faq-layout">
+        <div>
+          <span class="eyebrow">FREQUENTLY ASKED QUESTIONS</span>
+          <h2 class="section-title" id="faq-heading">Giải đáp về hệ sinh thái EduLab.</h2>
+          <p class="section-desc">
+            Những thông tin cốt lõi giúp học sinh, giáo viên và người tự học hiểu rõ vai trò của EduLab Home và 5 phòng Lab bộ môn.
+          </p>
+        </div>
+
+        <div class="faq-list" id="faq-list">
+          <div class="faq-item is-open">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="true" aria-controls="faq-ans-1" id="faq-btn-1">
+                <span>1. EduLab là gì?</span>
+                <span class="faq-icon-box" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-ans-1" role="region" aria-labelledby="faq-btn-1">
+              EduLab (Education Laboratory) là hệ sinh thái công nghệ giáo dục tiếng Việt, kết nối năm website học tập tương tác chuyên biệt dành cho năm môn học: Hóa học (ChemLab), Vật lý (PhysicsLab), Toán học (MathLab), Sinh học (BioLab) và Tin học (ITLab).
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-2" id="faq-btn-2">
+                <span>2. EduLab Home có phải là một phòng thí nghiệm không?</span>
+                <span class="faq-icon-box" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-ans-2" role="region" aria-labelledby="faq-btn-2" hidden>
+              Không. EduLab Home là trang chủ trung tâm và cổng điều hướng (navigation portal). Các mô phỏng hay công cụ học tập chuyên môn không nằm gộp trong trang chủ mà được xây dựng tại từng website Lab độc lập.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-3" id="faq-btn-3">
+                <span>3. Các phòng Lab có hoạt động độc lập không?</span>
+                <span class="faq-icon-box" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-ans-3" role="region" aria-labelledby="faq-btn-3" hidden>
+              Có. Mỗi phòng Lab (ChemLab, PhysicsLab, MathLab, BioLab, ITLab) là một website độc lập hoàn toàn với kho mã nguồn, giao diện người dùng, tính năng, tên miền/đường dẫn và lộ trình phát triển riêng.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-4" id="faq-btn-4">
+                <span>4. Làm thế nào để truy cập một phòng Lab?</span>
+                <span class="faq-icon-box" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-ans-4" role="region" aria-labelledby="faq-btn-4" hidden>
+              Bạn chỉ cần chọn môn học mong muốn tại mục "Khám phá Lab" hoặc "Bộ khám phá Lab" trên trang chủ và nhấn vào liên kết điều hướng. Khi đường dẫn của một phòng Lab đã được cấu hình, trình duyệt sẽ mở trang web Lab đó trong tab mới. Nếu liên kết chưa được gắn, trang sẽ hiển thị trạng thái "Chưa cập nhật liên kết".
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5" id="faq-btn-5">
+                <span>5. EduLab hỗ trợ những môn học nào?</span>
+                <span class="faq-icon-box" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-ans-5" role="region" aria-labelledby="faq-btn-5" hidden>
+              Hệ sinh thái EduLab tập trung vào 5 lĩnh vực cốt lõi: Hóa học (ChemLab), Vật lý (PhysicsLab), Toán học (MathLab), Sinh học (BioLab) và Tin học (ITLab), phục vụ học sinh THPT, giáo viên và người tự học yêu thích STEM.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FINAL CALL TO ACTION -->
+    <section class="section reveal-section" aria-labelledby="final-cta-heading">
+      <div class="container">
+        <div class="final-cta-box">
+          <span class="eyebrow">YOUR NEXT DISCOVERY</span>
+          <h2 class="section-title" id="final-cta-heading">Hành trình khám phá bắt đầu từ đây.</h2>
+          <p class="section-desc">
+            Chọn một lĩnh vực bạn yêu thích và bắt đầu hành trình học tập của riêng mình.
+          </p>
+          <a href="#kham-pha-lab" class="btn btn-primary">
+            <span>Khám phá 5 phòng Lab</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 10. MULTI-COLUMN FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="brand-link">
+            <div class="brand-logo-wrap">
+              <img
+                src="./assets/edulab-logo.png"
+                alt="Logo chính thức của EduLab"
+                class="brand-logo-img"
+                width="40"
+                height="40"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              >
+              <span class="brand-logo-fallback" aria-hidden="true">EL</span>
+            </div>
+            <div class="brand-wordmark">
+              <span class="brand-name">Edu<span>Lab</span></span>
+              <span class="brand-sub">Education Laboratory</span>
+            </div>
+          </a>
+          <p class="footer-brand-desc">
+            Biến kiến thức thành trải nghiệm. Cổng kết nối hệ sinh thái 5 không gian học tập tương tác độc lập: Hóa học, Vật lý, Toán học, Sinh học và Tin học.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Điều hướng</h3>
+          <ul class="footer-links">
+            <li><a href="#top">Trang chủ</a></li>
+            <li><a href="#kham-pha-lab">Khám phá Lab</a></li>
+            <li><a href="#ve-edulab">Về EduLab</a></li>
+            <li><a href="#he-sinh-thai">Hệ sinh thái</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Hệ thống 05 Phòng Lab</h3>
+          <ul class="footer-links" id="footer-lab-links">
+            <li><span data-lab-url="VITE_CHEMLAB_URL">ChemLab — Hóa học</span></li>
+            <li><span data-lab-url="VITE_PHYSICSLAB_URL">PhysicsLab — Vật lý</span></li>
+            <li><span data-lab-url="VITE_MATHLAB_URL">MathLab — Toán học</span></li>
+            <li><span data-lab-url="VITE_BIOLAB_URL">BioLab — Sinh học</span></li>
+            <li><span data-lab-url="VITE_ITLAB_URL">ITLab — Tin học</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© <span id="current-year">2026</span> EduLab. Education Laboratory.</p>
+        <p>Khám phá. Tương tác. Thấu hiểu.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button
+    type="button"
+    class="back-to-top"
+    id="back-to-top"
+    aria-label="Lên đầu trang"
+    title="Lên đầu trang"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+
+  <!-- Accessible Toast Notification for Unconfigured URLs -->
+  <div class="status-toast" id="status-toast" role="status" aria-live="polite"></div>
+  
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+import './styles/tokens.css';
+import './styles/main.css';
+import './styles/responsive.css';
+import './styles/planet-hero.css';
+import './styles/living-universe.css';
+import { initEntranceAnimation, initFooterYear, initScrollReveals } from './modules/animations.js';
+import { renderLabDiscoveryAndFooter } from './modules/discovery.js';
+import { initEcosystemDiagram } from './modules/ecosystem.js';
+import { initLabExplorer } from './modules/explorer.js';
+import { initFAQ } from './modules/faq.js';
+import { initHeroNexus } from './modules/nexus.js';
+import { initNavigation } from './modules/navigation.js';
+import { initPlanetHero } from './modules/planet-hero.js';
+import { initThemeToggle } from './modules/theme.js';
+import { initLivingUniverse } from './modules/living-universe.js';
+
+initEntranceAnimation();
+initPlanetHero();
+initThemeToggle();
+initNavigation();
+renderLabDiscoveryAndFooter();
+initHeroNexus();
+initLabExplorer();
+initEcosystemDiagram();
+const disposeUniverse = initLivingUniverse();
+initFAQ();
+initScrollReveals();
+initFooterYear();
+
+if (import.meta.hot) import.meta.hot.dispose(disposeUniverse);

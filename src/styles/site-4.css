@@ -1,0 +1,222 @@
+/* EduLab Home 4.0: one motion language with a distinct composition per section. */
+html { scroll-padding-top: 86px; }
+
+body { background-color: var(--bg-primary); }
+
+.section {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--section-space);
+  overflow: clip;
+}
+
+.section-header-row { align-items: end; margin-bottom: clamp(40px, 6vw, 76px); }
+.section-title { max-width: 900px; letter-spacing: -0.045em; text-wrap: balance; }
+.section-desc { max-width: 610px; }
+
+#kham-pha-lab::before,
+#nexus::before,
+#bo-kham-pha::before,
+#ve-edulab::before,
+#cach-hoat-dong::before,
+#he-sinh-thai::before,
+#faq::before {
+  position: absolute;
+  right: var(--gutter);
+  top: 38px;
+  z-index: -1;
+  color: var(--border-primary);
+  font: 700 clamp(5rem, 13vw, 13rem)/1 var(--font-display);
+  letter-spacing: -0.08em;
+  opacity: 0.22;
+}
+#kham-pha-lab::before { content: "01"; }
+#nexus::before { content: "02"; }
+#bo-kham-pha::before { content: "03"; }
+#ve-edulab::before { content: "04"; }
+#cach-hoat-dong::before { content: "05"; }
+#he-sinh-thai::before { content: "06"; }
+#faq::before { content: "07"; }
+
+/* Hero media has a geometric fallback even when every remote asset fails. */
+.planet-sky::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -42vw;
+  z-index: 0;
+  width: min(112vw, 1580px);
+  aspect-ratio: 1;
+  border: 2px solid rgba(255,255,255,.28);
+  border-radius: 50%;
+  background-color: #236a91;
+  box-shadow: inset -140px -100px 0 #082a41, inset 80px 46px 0 rgba(255,255,255,.08), 0 -28px 90px rgba(77,181,216,.28);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: background-color var(--motion-base), box-shadow var(--motion-base), opacity var(--motion-base);
+}
+.planet-hero.has-poster-fallback .planet-sky::before { opacity: 1; }
+.planet-hero[data-featured="venus"] .planet-sky::before { background-color: #ba7441; box-shadow: inset -140px -100px 0 #512d24, inset 90px 40px 0 rgba(255,232,191,.12), 0 -28px 90px rgba(232,142,72,.25); }
+.planet-hero[data-featured="mars"] .planet-sky::before { background-color: #a7482e; box-shadow: inset -140px -100px 0 #472018, inset 80px 42px 0 rgba(255,213,179,.1), 0 -28px 90px rgba(215,81,48,.22); }
+.planet-poster.is-broken { background-image: none !important; opacity: 0 !important; }
+.planet-side.has-fallback img { opacity: 0 !important; }
+.planet-side.has-fallback::before {
+  content: "";
+  position: absolute;
+  inset: 16%;
+  border-radius: 50%;
+  background-color: #27769a;
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: inset -18px -12px 0 #0a3448, 0 0 26px rgba(91,193,220,.35);
+}
+.planet-side.has-fallback[data-planet="venus"]::before { background-color: #bc7847; box-shadow: inset -18px -12px 0 #5b3224, 0 0 26px rgba(236,155,91,.32); }
+.planet-side.has-fallback[data-planet="mars"]::before { background-color: #ad4d31; box-shadow: inset -18px -12px 0 #4a2118, 0 0 26px rgba(222,91,53,.3); }
+
+/* Section motion: content stays readable without JS. */
+.js-ready .reveal-section:not(.is-visible) { opacity: 1; transform: none; }
+.js-ready .motion-item {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity var(--motion-slow) var(--e-expo), transform var(--motion-slow) var(--e-expo);
+  transition-delay: calc(min(var(--motion-order), 6) * 65ms);
+}
+.js-ready .is-visible .motion-item { opacity: 1; transform: none; }
+.js-ready #kham-pha-lab .lab-card:nth-child(even) { transform: translateY(54px) rotate(.5deg); }
+.js-ready #kham-pha-lab.is-visible .lab-card { transform: none; }
+.js-ready #nexus .nexus-section-copy > * { transform: translateX(-38px); }
+.js-ready #nexus .nexus-stage { transform: translateX(40px) scale(.96); }
+.js-ready #nexus.is-visible .motion-item { transform: none; }
+.js-ready #ve-edulab .philosophy-row { transform: translateX(-34px); }
+.js-ready #ve-edulab .philosophy-row:nth-child(even) { transform: translateX(34px); }
+.js-ready #ve-edulab.is-visible .philosophy-row { transform: none; }
+
+/* Five labs as an exhibition wall. */
+.labs-bento-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(16px, 2.2vw, 32px); }
+.labs-bento-grid > .lab-card { grid-column: span 4; }
+.labs-bento-grid > .lab-card:nth-child(1) { grid-column: span 7; }
+.labs-bento-grid > .lab-card:nth-child(2) { grid-column: span 5; }
+.lab-card {
+  min-height: 430px;
+  border-radius: 2px;
+  border-color: var(--border-primary);
+  padding: clamp(24px, 3vw, 42px);
+  overflow: hidden;
+  box-shadow: none;
+  transition: border-color var(--motion-base), transform var(--motion-base) var(--e-expo), box-shadow var(--motion-base);
+}
+.lab-card:nth-child(1), .lab-card:nth-child(2) { min-height: 500px; }
+.lab-card:hover, .lab-card:focus-within { border-color: var(--brand-teal); transform: translateY(-8px); box-shadow: 0 22px 0 rgba(4,13,18,.38); }
+.lab-card-top { position: relative; z-index: 2; }
+.lab-index-badge { border-radius: 50%; }
+.lab-artwork-box { min-height: 190px; border-radius: 0; border-width: 0 0 1px; background-color: transparent; }
+.lab-artwork-box svg { transform: scale(.92); transition: transform var(--motion-slow) var(--e-expo); }
+.lab-card:hover .lab-artwork-box svg, .lab-card:focus-within .lab-artwork-box svg { transform: scale(1.08) rotate(-1deg); }
+.lab-name-en { font-size: clamp(2rem, 3vw, 3.75rem); }
+.lab-card-footer-static { color: var(--text-muted); font-size: .82rem; }
+.lab-card-footer-static a { color: var(--brand-teal); }
+
+/* Nexus behaves like a focused observatory. */
+.nexus-section { background-color: #061118; }
+.nexus-section-layout { gap: clamp(36px, 6vw, 96px); }
+.nexus-stage { border-left: 1px solid var(--border-primary); padding-left: clamp(18px, 4vw, 64px); }
+.nexus-viewport { min-height: clamp(500px, 60vw, 720px); border-radius: 2px; border-color: #28434d; box-shadow: 0 30px 0 rgba(0,0,0,.18); transition: border-color var(--motion-base), transform var(--motion-focus) var(--e-expo); }
+.nexus-viewport[data-selected]:not([data-selected=""]) { border-color: var(--brand-teal); }
+.nexus-node { transition: opacity var(--motion-base), transform var(--motion-focus) var(--e-expo), border-color var(--motion-base); }
+.nexus-viewport[data-selected]:not([data-selected=""]) .nexus-node:not(.is-selected) { opacity: .58; }
+.nexus-hud { border-radius: 0; }
+
+/* Explorer is a dark instrument panel with an animated specimen view. */
+#bo-kham-pha { background-color: #081820; }
+.explorer-controls { border-radius: 2px; padding: 18px; box-shadow: 10px 10px 0 rgba(3,11,15,.32); }
+.search-input, .filter-btn { border-radius: 2px; }
+.explorer-workspace { gap: 1px; background-color: var(--border-primary); border: 1px solid var(--border-primary); align-items: stretch; }
+.explorer-workspace > div { background-color: var(--bg-secondary); padding: clamp(20px, 3vw, 38px); }
+.explorer-tab-list { gap: 0; }
+.explorer-tab-item { border: 0; border-bottom: 1px solid var(--border-primary); border-radius: 0; padding: 24px 18px; }
+.explorer-tab-item.is-selected { border-left: 0; background-color: var(--surface-elevated); transform: translateX(10px); }
+.explorer-tab-item > [aria-hidden] { transition: transform var(--motion-base) var(--e-expo); }
+.explorer-tab-item.is-selected > [aria-hidden] { transform: translateX(8px); }
+.explorer-preview-panel { position: sticky; top: 100px; border: 0; border-radius: 0; box-shadow: none; background-color: var(--surface-primary); }
+.preview-visual-stage { min-height: 260px; border-radius: 0; overflow: hidden; }
+.preview-visual-stage svg { transition: transform var(--motion-slow) var(--e-expo); }
+.explorer-preview-panel:hover .preview-visual-stage svg { transform: scale(1.06) rotate(.5deg); }
+.preview-pillar-item { border-radius: 0; }
+.no-js-note { grid-column: 1 / -1; padding: 20px; background-color: var(--surface-primary); color: var(--text-secondary); }
+
+/* Editorial principles. */
+.philosophy-list { margin-top: clamp(52px, 8vw, 100px); }
+.philosophy-row { grid-template-columns: 120px .8fr 1.5fr 110px; min-height: 200px; padding-inline: clamp(0px, 2vw, 28px); }
+.philosophy-row:hover, .philosophy-row:focus-within { background-color: var(--surface-primary); }
+.philosophy-row:hover .philosophy-num { color: var(--brand-teal); -webkit-text-stroke-color: var(--brand-teal); }
+.philosophy-geo svg { transition: transform var(--motion-slow) var(--e-expo), color var(--motion-base); }
+.philosophy-row:hover .philosophy-geo svg { transform: rotate(18deg) scale(1.12); color: var(--brand-teal); }
+
+/* Timeline progress follows the viewport. */
+.steps-timeline { --timeline-progress: 0; gap: 1px; background-color: var(--border-primary); }
+.steps-timeline::before { top: -22px; transform: scaleX(var(--timeline-progress)); transition: none; height: 3px; }
+#cach-hoat-dong.is-visible .steps-timeline::before { transform: scaleX(var(--timeline-progress)); }
+.step-node { min-height: 260px; border-radius: 0; border-width: 0; border-top: 4px solid var(--brand-blue); }
+.step-node:hover { transform: translateY(-10px); z-index: 2; }
+
+/* Ecosystem reads as one connected system. */
+.eco-architecture { border-radius: 2px; padding: clamp(32px, 6vw, 76px); }
+.eco-central-box { border-radius: 0; box-shadow: 12px 12px 0 rgba(3,11,15,.38); }
+.eco-trunk-line, .eco-branch-bar { transform-origin: top left; }
+.eco-nodes-row { gap: 1px; background-color: var(--border-strong); }
+.eco-node-btn { min-height: 150px; border-radius: 0; border: 0; }
+.eco-node-btn:not(.is-active) { opacity: .72; }
+.eco-node-btn.is-active { opacity: 1; transform: translateY(-10px); box-shadow: 0 10px 0 var(--brand-teal); }
+.eco-detail-bar { border-radius: 0; min-height: 120px; }
+
+/* FAQ uses editorial rules and controlled height animation. */
+.faq-layout { grid-template-columns: minmax(250px, 4fr) minmax(0, 8fr); }
+.faq-list { gap: 0; border-top: 1px solid var(--border-primary); }
+.faq-item { border: 0; border-bottom: 1px solid var(--border-primary); border-radius: 0; background-color: transparent; }
+.faq-item.is-open { border-color: var(--brand-teal); background-color: var(--surface-primary); }
+.faq-trigger { padding: 26px 18px; font-size: clamp(1rem, 1.5vw, 1.25rem); }
+.faq-icon-box { border-radius: 50%; background-color: transparent; }
+.faq-panel { overflow: hidden; padding-inline: 18px; }
+
+/* Final invitation and footer. */
+.final-cta-box { position: relative; min-height: 430px; justify-content: center; border-radius: 2px; overflow: hidden; box-shadow: 14px 14px 0 #040d12; }
+.final-cta-box::before, .final-cta-box::after { content: ""; position: absolute; border: 1px solid var(--border-strong); border-radius: 50%; pointer-events: none; }
+.final-cta-box::before { width: 360px; height: 360px; left: -180px; top: -160px; }
+.final-cta-box::after { width: 260px; height: 260px; right: -80px; bottom: -150px; }
+.final-cta-box > * { position: relative; z-index: 1; }
+.site-footer { border-top: 1px solid var(--border-primary); }
+.footer-grid { grid-template-columns: 1.5fr .75fr 1fr; gap: clamp(30px, 6vw, 90px); }
+.footer-links a, .footer-links button { transition: color var(--motion-fast), transform var(--motion-fast); }
+.footer-links a:hover, .footer-links button:hover { color: var(--brand-teal); transform: translateX(4px); }
+
+@media (max-width: 1029px) {
+  .labs-bento-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .labs-bento-grid > .lab-card, .labs-bento-grid > .lab-card:nth-child(1), .labs-bento-grid > .lab-card:nth-child(2) { grid-column: auto; min-height: 430px; }
+  .labs-bento-grid > .lab-card:last-child { grid-column: 1 / -1; }
+  .nexus-stage { border-left: 0; padding-left: 0; }
+  .explorer-preview-panel { position: static; }
+  .philosophy-row { grid-template-columns: 90px .8fr 1.5fr 80px; }
+}
+
+@media (max-width: 760px) {
+  .section { padding-block: clamp(72px, 20vw, 112px); }
+  .section-header-row { margin-bottom: 36px; }
+  .labs-bento-grid { grid-template-columns: 1fr; }
+  .labs-bento-grid > .lab-card:last-child { grid-column: auto; }
+  .lab-card, .labs-bento-grid > .lab-card:nth-child(1), .labs-bento-grid > .lab-card:nth-child(2) { min-height: 390px; }
+  .explorer-workspace { display: block; }
+  .explorer-workspace > div + div { border-top: 1px solid var(--border-primary); }
+  .preview-pillars { grid-template-columns: 1fr; }
+  .philosophy-row { grid-template-columns: 62px 1fr; gap: 18px; }
+  .philosophy-text, .philosophy-geo { grid-column: 2; }
+  .philosophy-geo { justify-content: flex-start; }
+  .steps-timeline { background-color: transparent; }
+  .eco-nodes-row { grid-template-columns: 1fr; }
+  .eco-node-btn { min-height: 96px; align-items: flex-start; text-align: left; }
+  .faq-layout, .footer-grid { grid-template-columns: 1fr; }
+  .final-cta-box { min-height: 380px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-item, .lab-card, .lab-artwork-box svg, .nexus-viewport, .nexus-node, .philosophy-geo svg { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
+  .steps-timeline { --timeline-progress: 1 !important; }
+}

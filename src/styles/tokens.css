@@ -1,0 +1,70 @@
+:root,
+    [data-theme="dark"] {
+      --bg-primary: #07161D;
+      --bg-secondary: #0D222B;
+      --surface-primary: #112B35;
+      --surface-elevated: #193440;
+      --border-primary: #29444C;
+      --border-strong: #3A5E68;
+
+      --text-primary: #F3F7F5;
+      --text-secondary: #B0C4C6;
+      --text-muted: #849DA3;
+
+      --brand-blue: #1974BC;
+      --brand-blue-hover: #2186D6;
+      --brand-teal: #13B7A6;
+      --brand-teal-hover: #17CFC0;
+
+      --accent-cream: #E5D9B9;
+      --accent-white: #FFFFFF;
+      --btn-ink: #07161D;
+
+      --shadow-solid: 0 12px 0 #040D12;
+      --shadow-card: 0 16px 36px rgba(3, 10, 14, 0.55);
+      --header-backdrop: rgba(7, 22, 29, 0.94);
+    }
+
+[data-theme="light"] {
+      --bg-primary: #F5F7F3;
+      --bg-secondary: #EDF2F0;
+      --surface-primary: #FFFFFF;
+      --surface-elevated: #E5EEEB;
+      --border-primary: #CEDCD7;
+      --border-strong: #9EB5AE;
+
+      --text-primary: #102B35;
+      --text-secondary: #466169;
+      --text-muted: #536B70;
+
+      --brand-blue: #125B99;
+      --brand-blue-hover: #0E497C;
+      --brand-teal: #087E73;
+      --brand-teal-hover: #06635A;
+
+      --accent-cream: #6E5D36;
+      --accent-white: #102B35;
+      --btn-ink: #FFFFFF;
+
+      --shadow-solid: 0 12px 0 #DCE6E2;
+      --shadow-card: 0 16px 36px rgba(16, 43, 53, 0.08);
+      --header-backdrop: rgba(245, 247, 243, 0.95);
+    }
+
+:root {
+      --font-serif: 'Prata', Georgia, serif;
+      --font-display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+      --max-w: 1440px;
+      --gutter: clamp(20px, 5vw, 88px);
+
+      --e-quint: cubic-bezier(0.22, 1, 0.36, 1);
+      --e-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --e-std: cubic-bezier(0.4, 0, 0.2, 1);
+      --motion-fast: 180ms;
+      --motion-base: 420ms;
+      --motion-slow: 760ms;
+      --motion-focus: 880ms;
+      --section-space: clamp(88px, 11vw, 176px);
+    }

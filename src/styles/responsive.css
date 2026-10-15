@@ -1,0 +1,220 @@
+@media (max-width: 1030px) {
+      .burger-btn {
+        display: inline-flex;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 84px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--bg-primary);
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 32px var(--gutter);
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(-12px);
+        pointer-events: none;
+        transition: opacity 0.25s var(--e-std), transform 0.25s var(--e-quint);
+        border-top: 1px solid var(--border-primary);
+        overflow-y: auto;
+      }
+
+      .site-header[data-menu-open="true"] .nav-menu {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .site-header.is-scrolled .nav-menu { top: 76px; }
+
+      .nav-link {
+        font-size: 1.35rem;
+        font-family: var(--font-display);
+        font-weight: 700;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-primary);
+      }
+
+      .nav-link::after {
+        display: none;
+      }
+
+      [data-theme="light"] .site-header[data-menu-open="true"] .nav-link {
+        color: var(--text-primary);
+      }
+
+      .labs-bento-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .labs-bento-grid > * {
+        min-width: 0;
+      }
+
+      .lab-card,
+      .lab-card:nth-child(1),
+      .lab-card:nth-child(2) {
+        grid-column: span 1;
+      }
+
+      .explorer-workspace {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .explorer-tab-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 8px;
+      }
+
+      .explorer-tab-item {
+        min-width: 220px;
+      }
+
+      .philosophy-row {
+        grid-template-columns: 90px 1fr;
+        gap: 16px;
+      }
+
+      .philosophy-text {
+        grid-column: 1 / -1;
+      }
+
+      .philosophy-geo {
+        display: none;
+      }
+
+      .steps-timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .eco-branch-bar,
+      .eco-trunk-line {
+        display: none;
+      }
+
+      .eco-nodes-row {
+        margin-top: 24px;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .faq-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 599px) {
+      .nexus-stage {
+        overflow: hidden;
+      }
+
+      .nexus-viewport {
+        width: calc(100% - 20px);
+      }
+
+      .nexus-viewport.has-webgl .nexus-node[data-lab="physicslab"] { left: 80%; }
+      .nexus-viewport.has-webgl .nexus-node[data-lab="itlab"] { left: 20%; }
+      .nexus-viewport.has-webgl .nexus-node[data-lab="mathlab"] { left: 70%; }
+      .nexus-viewport.has-webgl .nexus-node[data-lab="biolab"] { left: 30%; }
+
+      .labs-bento-grid,
+      .steps-timeline,
+      .eco-nodes-row,
+      .preview-pillars,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-timeline { padding-left: 18px; }
+      .steps-timeline::before {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      #cach-hoat-dong.is-visible .steps-timeline::before { transform: scaleY(1); }
+
+      .header-inner {
+        gap: 12px;
+      }
+
+      .brand-link {
+        gap: 8px;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      .explorer-controls {
+        padding: 12px;
+      }
+
+      .search-field-wrap {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+      }
+
+      .lab-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nexus-node {
+        width: 78px;
+        height: 78px;
+        border-radius: 16px;
+      }
+
+      .nexus-node-sub {
+        display: none;
+      }
+
+      .nexus-core {
+        width: 104px;
+        height: 104px;
+      }
+
+      .nexus-hud {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nexus-hud-actions {
+        width: 100%;
+      }
+
+      .nexus-hud-actions .btn {
+        flex: 1;
+      }
+
+    }
+
+    html[data-motion="off"] {
+      scroll-behavior: auto;
+    }
+
+    html[data-motion="off"] {
+      .js-ready .reveal-section:not(.is-visible) {
+        opacity: 1;
+        transform: none;
+      }
+
+      .steps-timeline::before { transform: none !important; }
+    }
