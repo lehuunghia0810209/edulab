@@ -21,7 +21,7 @@ export function showStatusToast(message) {
   }, 3200);
 }
 
-export function createLabActionElement(lab, compact) {
+export function createLabActionElement(lab, compact, label) {
   const hasUrl = Boolean(lab.url && lab.url.trim().length > 0);
   if (hasUrl) {
     const link = document.createElement('a');
@@ -31,7 +31,7 @@ export function createLabActionElement(lab, compact) {
     link.className = 'btn btn-primary';
     if (compact) link.style.padding = '10px 18px';
     const span = document.createElement('span');
-    span.textContent = compact ? 'Xem Lab' : 'Khám phá Lab';
+    span.textContent = label || (compact ? 'Xem Lab' : 'Khám phá Lab');
     link.appendChild(span);
     return link;
   } else {

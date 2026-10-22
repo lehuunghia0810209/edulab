@@ -40,10 +40,12 @@ export function initScrollReveals() {
     've-edulab': '.eyebrow, .section-title, .section-desc, .philosophy-row',
     'cach-hoat-dong': '.section-header-row, .step-node',
     'he-sinh-thai': '.section-header-row, .eco-detail-bar',
+    exa: '.exa-copy > *, .exa-stage, .exa-capabilities li, .exa-ecosystem',
     faq: '.faq-layout > *, .faq-item',
   };
   revealEls.forEach(function(section) {
-    const selector = motionGroups[section.id] || '.final-cta-box > *';
+    const selector = motionGroups[section.id];
+    if (!selector) return;
     section.querySelectorAll(selector).forEach(function(item, index) {
       item.classList.add('motion-item');
       item.style.setProperty('--motion-order', index);

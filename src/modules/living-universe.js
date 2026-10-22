@@ -19,7 +19,7 @@ export function initLivingUniverse() {
       : `<svg class="orbit-motif" viewBox="0 0 360 260" fill="none" aria-hidden="true"><path d="M180 45L70 195H290Z"/><g class="ambient motif-orbit"><path d="M180 45L70 195H290Z" class="ambient network-flow"/></g><circle class="motif-center" cx="180" cy="45" r="24"/><circle class="motif-center" cx="70" cy="195" r="24"/><circle class="motif-center" cx="290" cy="195" r="24"/><path d="M180 45V145M70 195L180 145L290 195"/><circle cx="180" cy="145" r="7"/></svg>`;
     element.dataset.principle = index;
   });
-  for (const selector of ['.faq-layout > div:first-child', '.final-cta-box', '.site-footer > .container']) {
+  for (const selector of ['.faq-layout > div:first-child', '.site-footer > .container']) {
     const parent = document.querySelector(selector);
     if (!parent) continue;
     const visual = document.createElement('div');

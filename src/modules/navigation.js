@@ -95,9 +95,8 @@ export function initNavigation() {
     });
   }
 
-  /* Active Section Indicator via IntersectionObserver */
   if ('IntersectionObserver' in window) {
-    const sections = ['top', 'kham-pha-lab', 've-edulab', 'he-sinh-thai', 'faq']
+    const sections = ['top', 'kham-pha-lab', 'exa', 've-edulab', 'he-sinh-thai', 'faq']
       .map(function(id) { return document.getElementById(id); })
       .filter(Boolean);
 

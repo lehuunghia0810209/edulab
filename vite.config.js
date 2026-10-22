@@ -10,7 +10,7 @@ function staticLabLinks(env) {
         try {
           const url = new URL(value);
           if (url.protocol !== 'http:' && url.protocol !== 'https:') return full;
-          return `<a href="${url.href.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer">${label.replace(' — Chưa cập nhật liên kết', ' — Khám phá Lab')}</a>`;
+          return `<a href="${url.href.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer">${label.replace(' — Chưa cập nhật liên kết', key === 'VITE_EXA_URL' ? '' : ' — Khám phá Lab')}</a>`;
         } catch {
           return full;
         }

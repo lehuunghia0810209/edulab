@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS, LABS, LAB_ILLUSTRATIONS } from '../data/labs.js';
+import { CATEGORY_LABELS, CONTACT_EMAIL, EXA, LABS, LAB_ILLUSTRATIONS } from '../data/labs.js';
 import { createLabActionElement, showStatusToast } from '../utils/helpers.js';
 
 export function renderLabDiscoveryAndFooter() {
@@ -76,27 +76,54 @@ export function renderLabDiscoveryAndFooter() {
   }
 
   if (footerList) {
-    footerList.innerHTML = '';
-    LABS.forEach(function(lab) {
-      const li = document.createElement('li');
-      const hasUrl = Boolean(lab.url && lab.url.trim().length > 0);
-      if (hasUrl) {
-        const a = document.createElement('a');
-        a.href = lab.url.trim();
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = lab.name + ' — ' + lab.subject;
-        li.appendChild(a);
-      } else {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = lab.name + ' — ' + lab.subject + ' (Chưa cập nhật liên kết)';
-        btn.addEventListener('click', function() {
-          showStatusToast(lab.name + ' (' + lab.subject + '): Chưa cập nhật liên kết.');
-        });
-        li.appendChild(btn);
-      }
-      footerList.appendChild(li);
-    });
+    footerList.replaceChildren(...LABS.map(createFooterProductItem));
   }
+
+  document.getElementById('footer-exa-links')?.replaceChildren(createFooterProductItem(EXA));
+
+  const exaSlot = document.getElementById('exa-action-slot');
+  if (exaSlot) {
+    exaSlot.replaceChildren(createLabActionElement(EXA, false, 'Vào Exa'));
+    if (!EXA.url) {
+      const note = document.createElement('p');
+      note.className = 'exa-cta-note';
+      note.textContent = 'Liên kết tới Exa chưa được cấu hình trên trang này.';
+      exaSlot.parentElement.append(note);
+    }
+  }
+
+  const contact = document.getElementById('footer-contact');
+  if (contact && CONTACT_EMAIL) {
+    const link = document.createElement('a');
+    link.href = 'mailto:' + CONTACT_EMAIL;
+    link.textContent = 'Liên hệ';
+    contact.replaceChildren(link);
+    contact.hidden = false;
+  }
+}
+
+function createFooterProductItem(product) {
+  const li = document.createElement('li');
+  const label = product.name + ' — ' + product.subject;
+  if (product.url) {
+    const a = document.createElement('a');
+    a.href = product.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = label;
+    li.appendChild(a);
+  } else {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = label;
+    const note = document.createElement('span');
+    note.className = 'footer-link-note';
+    note.textContent = 'Chưa cập nhật liên kết';
+    btn.appendChild(note);
+    btn.addEventListener('click', function() {
+      showStatusToast(product.name + ' (' + product.subject + '): Chưa cập nhật liên kết.');
+    });
+    li.appendChild(btn);
+  }
+  return li;
 }

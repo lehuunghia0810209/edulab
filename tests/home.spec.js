@@ -398,7 +398,7 @@ test('every Lab keeps artwork, status and one safe action', async ({ page }) => 
 
 test('major sections resolve their individual reveal states', async ({ page }) => {
   await page.goto('/');
-  for (const id of ['kham-pha-lab', 'nexus', 'bo-kham-pha', 've-edulab', 'cach-hoat-dong', 'he-sinh-thai', 'faq']) {
+  for (const id of ['kham-pha-lab', 'nexus', 'bo-kham-pha', 'exa', 've-edulab', 'cach-hoat-dong', 'he-sinh-thai', 'faq']) {
     const section = page.locator('#' + id);
     await section.scrollIntoViewIfNeeded();
     await expect(section).toHaveClass(/is-visible/);
@@ -415,4 +415,144 @@ test('all hero media can fail without broken-image UI', async ({ page }) => {
   await page.locator('.planet-side-left').click();
   await expect(page.locator('.planet-title')).toHaveText('VENUS');
   await expect(page.locator('.planet-primary-cta')).toBeVisible();
+});
+
+test('Exa is a separate assessment platform with truthful unconfigured state', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('.lab-card')).toHaveCount(5);
+  await expect(page.locator('.nexus-node')).toHaveCount(5);
+  await expect(page.locator('.eco-node-btn')).toHaveCount(5);
+  await expect(page.locator('.exa-capabilities li')).toHaveCount(4);
+  await expect(page.locator('.exa-eco-chips span')).toHaveCount(5);
+  await page.locator('.nav-link[href="#exa"]').click();
+  await expect(page).toHaveURL(/#exa$/);
+  await expect(page.locator('.nav-link[href="#exa"]')).toHaveClass(/is-active/);
+  const order = await page.locator('main > section').evaluateAll(sections => sections.map(section => section.id));
+  expect(order.indexOf('exa')).toBe(order.indexOf('bo-kham-pha') + 1);
+  const action = page.locator('#exa-action-slot button');
+  await expect(action).toHaveText('Chưa cập nhật liên kết');
+  await expect(page.locator('#exa-action-slot a')).toHaveCount(0);
+  await action.click();
+  await expect(page.locator('#status-toast')).toContainText('Exa');
+  await expect(page.locator('#footer-exa-links button')).toContainText('Exa');
+  await expect(page.locator('#footer-contact')).toBeHidden();
+});
+
+test('footer links resolve and the redundant final CTA is gone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#nexus-heading')).toHaveText(/^Tri thức luôn\s*chuyển động\.$/);
+  await expect(page.getByText('Hành trình khám phá bắt đầu từ đây')).toHaveCount(0);
+  await expect(page.locator('.final-cta-box')).toHaveCount(0);
+  const targets = await page.locator('a[href^="#"]').evaluateAll(links => links.map(link => link.getAttribute('href')));
+  for (const hash of new Set(targets)) await expect(page.locator(hash), hash).toHaveCount(1);
+  for (const title of ['Khám phá', 'Sản phẩm', 'Tìm hiểu']) await expect(page.locator('.footer-col-title', { hasText: title })).toHaveCount(1);
+  for (const width of [1440, 768, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBe(0);
+  }
+});
+
+test('Knowledge Galaxy fills its enlarged stage', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await page.locator('#nexus').scrollIntoViewIfNeeded();
+  await expect(page.locator('.nexus-canvas')).toBeVisible();
+  const box = await page.locator('#nexus-viewport').boundingBox();
+  expect(box.height).toBeGreaterThanOrEqual(700);
+  // The core badge is sized from the fitted camera distance (108px here), so it detects both a shrunken and an overflowing system.
+  const core = await page.locator('#nexus-viewport').evaluate(element => Number.parseFloat(element.style.getPropertyValue('--nexus-core-size')));
+  expect(core).toBeGreaterThanOrEqual(98);
+  expect(core).toBeLessThanOrEqual(120);
+  const layout = await page.locator('#nexus-viewport').evaluate(element => ({
+    points: [...element.querySelectorAll('.nexus-node')].map(node => node.dataset.canvasPoint.split(',').map(Number)),
+    controlsTop: 1 - element.querySelector('.galaxy-controls').offsetHeight / element.clientHeight,
+  }));
+  const xs = layout.points.map(point => point[0]), ys = layout.points.map(point => point[1]);
+  expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(.42);
+  expect(Math.min(...xs)).toBeGreaterThan(.06);
+  expect(Math.max(...xs)).toBeLessThan(.94);
+  expect(Math.max(...ys)).toBeLessThan(layout.controlsTop);
+});
+
+// Each centre comes from different rendered pixels: the badge's CSS border, the WebGL core dash ring and the WebGL ITLab orbit.
+async function measureGalaxyCentres(page, scale) {
+  const viewport = page.locator('#nexus-viewport');
+  const nodes = await viewport.evaluate(element => [...element.querySelectorAll('.nexus-node')].map(node => {
+    const [x, y] = node.dataset.canvasPoint.split(',').map(Number);
+    return [x * element.clientWidth, y * element.clientHeight + 12];
+  }));
+  const png = await page.screenshot({ clip: await viewport.boundingBox() });
+  return page.evaluate(async ({ data, scale, nodes }) => {
+    const image = new Image();
+    image.src = 'data:image/png;base64,' + data;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    const px = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    const bg = [0, 1, 2].map(channel => { const values = []; for (let i = channel; i < px.length; i += 388) values.push(px[i]); values.sort((a, b) => a - b); return values[values.length >> 1]; });
+    const select = test => { const out = []; for (let y = 0; y < canvas.height; y++) for (let x = 0; x < canvas.width; x++) { const i = (y * canvas.width + x) * 4; if (test(px[i] - bg[0], px[i + 1] - bg[1], px[i + 2] - bg[2], px[i])) out.push([x / scale, y / scale]); } return out; };
+    const solve = (matrix, vector) => {
+      const a = matrix.map((row, i) => [...row, vector[i]]), n = vector.length;
+      for (let i = 0; i < n; i++) { for (let k = i + 1; k < n; k++) { const f = a[k][i] / a[i][i]; for (let j = i; j <= n; j++) a[k][j] -= f * a[i][j]; } }
+      const x = Array(n).fill(0);
+      for (let i = n - 1; i >= 0; i--) { let s = a[i][n]; for (let j = i + 1; j < n; j++) s -= a[i][j] * x[j]; x[i] = s / a[i][i]; }
+      return x;
+    };
+    const leastSquares = (rows, rhs) => { const n = rows[0].length, m = Array.from({ length: n }, () => Array(n).fill(0)), v = Array(n).fill(0); rows.forEach((row, k) => { for (let i = 0; i < n; i++) { v[i] += row[i] * rhs[k]; for (let j = 0; j < n; j++) m[i][j] += row[i] * row[j]; } }); return solve(m, v); };
+    const circle = points => { const [d, e] = leastSquares(points.map(([x, y]) => [x, y, 1]), points.map(([x, y]) => -(x * x + y * y))); return [-d / 2, -e / 2]; };
+    const ellipse = (points, origin) => {
+      let keep = points, result;
+      for (const tolerance of [25, 10, 5, 3]) {
+        const q = keep.map(([x, y]) => [x - origin[0], y - origin[1]]);
+        const [a, b, c, d, e] = leastSquares(q.map(([x, y]) => [x * x, x * y, y * y, x, y]), q.map(() => 1));
+        const [u, v] = solve([[2 * a, b], [b, 2 * c]], [-d, -e]);
+        const k = a * u * u + b * u * v + c * v * v + d * u + e * v;
+        result = { centre: [u + origin[0], v + origin[1]], rx: Math.sqrt(Math.abs((1 - k) / a)), ry: Math.sqrt(Math.abs((1 - k) / c)) };
+        keep = keep.filter(([x, y]) => Math.abs(Math.hypot((x - result.centre[0]) / result.rx, (y - result.centre[1]) / result.ry) - 1) * Math.min(result.rx, result.ry) < tolerance);
+      }
+      return result;
+    };
+    const teal = select((dr, dg, db) => dg > 35 && dg > dr + 15 && db > dr + 10);
+    const ring = (start, inner, outer) => {
+      let centre = start;
+      for (let pass = 0; pass < 4; pass++) {
+        const sectors = Array.from({ length: 48 }, () => []);
+        teal.forEach(([x, y]) => { const d = Math.hypot(x - centre[0], y - centre[1]); if (d > inner && d < outer) sectors[Math.floor((Math.atan2(y - centre[1], x - centre[0]) + Math.PI) / (2 * Math.PI) * 48) % 48].push([x, y, d]); });
+        const picks = sectors.filter(list => list.length).map(list => list.sort((a, b) => a[2] - b[2])[list.length >> 1]);
+        const median = picks.map(p => p[2]).sort((a, b) => a - b)[picks.length >> 1];
+        centre = circle(picks.filter(p => Math.abs(p[2] - median) < 4).map(([x, y]) => [x, y]));
+      }
+      return centre;
+    };
+    const purple = select((dr, dg, db, r) => dr > 25 && dr > dg + 4 && db > dg + 8 && r < 230).filter(([x, y]) => nodes.every(([nx, ny]) => Math.hypot(x - nx, y - ny) > 38));
+    const start = [purple.reduce((s, p) => s + p[0], 0) / purple.length, purple.reduce((s, p) => s + p[1], 0) / purple.length];
+    const orbit = ellipse(purple, start);
+    const unit = orbit.rx / 3.65;
+    const white = select((dr, dg, db, r) => r > 235 && dr + bg[0] > 235 && dg + bg[1] > 235 && db + bg[2] > 235);
+    const disc = [white.reduce((s, p) => s + p[0], 0) / white.length, white.reduce((s, p) => s + p[1], 0) / white.length];
+    return { badge: ring(disc, .5 * unit, .66 * unit), core: ring(orbit.centre, .88 * unit, 1.03 * unit), orbit: orbit.centre };
+  }, { data: png.toString('base64'), scale, nodes });
+}
+
+test('Knowledge Galaxy core, badge and orbits share one rendered centre', async ({ browser }) => {
+  for (const deviceScaleFactor of [1, 1.25]) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor });
+    const page = await context.newPage();
+    await page.goto('/');
+    await page.locator('#nexus-viewport').scrollIntoViewIfNeeded();
+    await expect(page.locator('.nexus-canvas')).toBeVisible();
+    await page.evaluate(() => { document.querySelector('.site-header').style.visibility = 'hidden'; });
+    await page.waitForTimeout(800);
+    const sizes = await page.evaluate(() => [document.querySelector('.nexus-canvas'), document.querySelector('#nexus-viewport')].map(element => Math.round(element.getBoundingClientRect().width)));
+    expect(sizes[0], `canvas CSS width at DPR ${deviceScaleFactor}`).toBe(sizes[1]);
+    const { badge, core, orbit } = await measureGalaxyCentres(page, deviceScaleFactor);
+    for (const [name, centre] of [['core rings', core], ['ITLab orbit', orbit]]) {
+      expect(Math.hypot(centre[0] - badge[0], centre[1] - badge[1]), `${name} vs badge at DPR ${deviceScaleFactor}`).toBeLessThanOrEqual(3);
+    }
+    await context.close();
+  }
 });

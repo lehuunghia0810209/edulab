@@ -12,7 +12,9 @@ const samples = [
   ['timeline', '.journey-orbit'],
   ['ecosystem', '.network-flow'],
   ['faq', '#faq .motif-orbit'],
-  ['cta', '.final-cta-box .motif-orbit'],
+  ['exa card', '.exa-card'],
+  ['exa orbit', '.exa-orbit'],
+  ['exa tokens', '.exa-token'],
   ['footer', '.site-footer .motif-orbit'],
 ];
 const read = element => {
@@ -144,7 +146,7 @@ test('legacy running remains an explicit opt-in when the visible control is remo
   const video=page.locator('video[data-planet="earth"]');
   await expect(video).toHaveClass(/is-playing/);
   await expect(video).toHaveJSProperty('paused',false);
-  for (const selector of ['.molecule-drift','.preview-visual-stage .orbit-electron','.philosophy-geo .motif-orbit','.journey-orbit','.eco-hub-wrap .network-flow','.final-cta-box .motif-orbit']) {
+  for (const selector of ['.molecule-drift','.preview-visual-stage .orbit-electron','.philosophy-geo .motif-orbit','.journey-orbit','.eco-hub-wrap .network-flow','.exa-card','.exa-scene']) {
     const artwork=page.locator(selector).first();
     await artwork.evaluate(element => element.scrollIntoView({block:'center',behavior:'instant'}));
     await expect(artwork).toHaveCSS('animation-play-state','running');

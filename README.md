@@ -1,6 +1,6 @@
 # EduLab Home
 
-EduLab Home là cổng điều hướng trung tâm cho năm website học tập độc lập: ChemLab, PhysicsLab, MathLab, BioLab và ITLab. Ứng dụng dùng HTML5, CSS3, JavaScript ES Modules và Vite; không có backend hay framework giao diện.
+EduLab Home là cổng điều hướng trung tâm cho năm website học tập độc lập — ChemLab, PhysicsLab, MathLab, BioLab và ITLab — cùng nền tảng kiểm tra trực tuyến Exa. Exa là một sản phẩm độc lập, không phải phòng Lab thứ sáu. Ứng dụng dùng HTML5, CSS3, JavaScript ES Modules và Vite; không có backend hay framework giao diện.
 
 ## Yêu cầu
 
@@ -78,6 +78,7 @@ EduLabHome/
 │   │   ├── planet-hero.css
 │   │   ├── responsive.css
 │   │   ├── living-universe.css
+│   │   ├── exa.css
 │   │   └── tokens.css
 │   └── utils/
 │       └── helpers.js
@@ -90,7 +91,7 @@ EduLabHome/
 └── vite.config.js
 ```
 
-Logo trong `public/assets/edulab-logo.png` là bản sao nguyên gốc để Vite phục vụ; tệp nguồn ban đầu trong `assets/edulab-logo.png` được giữ lại. Không dùng gradient trong CSS/SVG.
+Logo chính thức duy nhất nằm trong `public/assets/edulab-logo.png` và được tham chiếu bằng đường dẫn tuyệt đối `/assets/edulab-logo.png` (Vite tự thêm `VITE_BASE_PATH`). Bản sao trùng từng byte ở `assets/` gốc đã được bỏ để `dist/` không chứa hai bản logo. Không dùng gradient trong CSS/SVG.
 
 ## Cấu hình liên kết Lab
 
@@ -104,7 +105,11 @@ VITE_PHYSICSLAB_URL=https://...
 VITE_MATHLAB_URL=https://...
 VITE_BIOLAB_URL=
 VITE_ITLAB_URL=
+VITE_EXA_URL=
+VITE_CONTACT_EMAIL=
 ```
+
+`VITE_EXA_URL` là địa chỉ nền tảng Exa, dùng chung validator HTTP/HTTPS với các Lab (`EXA` trong `src/data/labs.js`). Khi trống, link “Exa” trên header vẫn cuộn tới section `#exa`, còn nút “Vào Exa” hiển thị trạng thái “Chưa cập nhật liên kết”. `VITE_CONTACT_EMAIL` là tùy chọn: chỉ khi có email hợp lệ, footer mới hiện mục “Liên hệ” (`mailto:`); không có giá trị mặc định.
 
 Không đưa thông tin bí mật vào biến `VITE_*`: các giá trị này được nhúng vào mã client khi build. Thẻ khám phá, Nexus, Explorer, sơ đồ hệ sinh thái và footer đều đọc từ cùng cấu hình.
 
@@ -112,8 +117,9 @@ Không đưa thông tin bí mật vào biến `VITE_*`: các giá trị này đ�
 
 - Dark/Light mode lưu lựa chọn trong `localStorage` với khóa `edulab-theme`.
 - Hero chuyển giữa Trái Đất, Sao Kim và Sao Hỏa. Video chỉ tải khi cần; nếu video, poster hoặc ảnh hành tinh từ CDN lỗi, giao diện tự chuyển sang poster hoặc hình học CSS cục bộ mà không hiện biểu tượng ảnh hỏng.
-- Knowledge Galaxy nằm trong mục Nexus, nạp Three.js khi gần khung nhìn; năm node nhỏ di chuyển trên quỹ đạo với đường nối và hạt ánh sáng. Nhãn HTML đứng yên để luôn đọc và chọn được, kể cả khi WebGL không sẵn sàng.
-- Living Universe dùng SVG/CSS cho minh họa từng môn, About, Timeline, Ecosystem, FAQ và footer. `motion-controller.js` cung cấp `initializeMotionSystem()`, `pauseMotion()`, `resumeMotion()`, `toggleMotion()` và `getMotionState()` cho SVG/CSS, WebGL và video Hero. Motion tự chạy khi tải trang; trạng thái `edulab-motion=paused` cũ bị bỏ qua, còn lựa chọn `running` được chuyển sang preference mới. Tùy chọn “Giảm chuyển động trang trí” ở footer lưu bằng khóa `edulab-reduce-motion`; chế độ hệ thống được áp dụng khi người dùng chưa chọn preference riêng, đồng thời tab ẩn và section ngoài màn hình vẫn tạm dừng motion.
+- Knowledge Galaxy nằm trong mục Nexus, nạp Three.js khi gần khung nhìn; năm node nhỏ di chuyển trên quỹ đạo với đường nối và hạt ánh sáng. Khoảng cách camera được tính từ kích thước thật của quỹ đạo để Galaxy lấp đầy canvas ở mọi tỷ lệ màn hình. Nhãn HTML đứng yên để luôn đọc và chọn được, kể cả khi WebGL không sẵn sàng.
+- Section Exa (sau Bộ khám phá) dùng minh họa 2.5D bằng CSS/SVG: các lớp `translateZ` trong một scene `preserve-3d`, tất cả gắn class `.ambient` nên tuân theo cùng vòng đời motion.
+- Living Universe dùng SVG/CSS cho minh họa từng môn, About, Timeline, Ecosystem, Exa, FAQ và footer. `motion-controller.js` cung cấp `initializeMotionSystem()`, `pauseMotion()`, `resumeMotion()`, `toggleMotion()` và `getMotionState()` cho SVG/CSS, WebGL và video Hero. Motion tự chạy khi tải trang; trạng thái `edulab-motion=paused` cũ bị bỏ qua, còn lựa chọn `running` được chuyển sang preference mới. Tùy chọn “Giảm chuyển động trang trí” ở footer lưu bằng khóa `edulab-reduce-motion`; chế độ hệ thống được áp dụng khi người dùng chưa chọn preference riêng, đồng thời tab ẩn và section ngoài màn hình vẫn tạm dừng motion.
 - Media hành tinh dùng URL từ tài liệu tham chiếu do người dùng cung cấp. Cần xác nhận quyền sử dụng và tính ổn định của CDN trước khi phát hành công khai.
 - `src/data/labs.js` là nguồn dữ liệu Lab; `src/modules/` chứa các hành vi theo trách nhiệm; `src/utils/helpers.js` chứa tiện ích dùng chung.
 - Các tệp style được nạp theo thứ tự design tokens, style nền tảng, responsive overrides, Hero SpaceEdu, rồi `living-universe.css`.

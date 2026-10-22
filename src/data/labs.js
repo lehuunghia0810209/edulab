@@ -72,3 +72,14 @@ export function validateLabUrl(id, value) {
 for (const lab of LABS) {
   lab.url = validateLabUrl(lab.id, lab.url);
 }
+
+export const EXA = {
+  id: "exa",
+  name: "Exa",
+  subject: "Kiểm tra trực tuyến",
+  url: validateLabUrl("exa", import.meta.env.VITE_EXA_URL || "https://exa-edulab.pages.dev/")
+};
+
+const contactEmail = String(import.meta.env.VITE_CONTACT_EMAIL || "").trim();
+export const CONTACT_EMAIL = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(contactEmail) ? contactEmail : "";
+if (contactEmail && !CONTACT_EMAIL) console.warn("VITE_CONTACT_EMAIL không hợp lệ; mục Liên hệ đã được ẩn.");

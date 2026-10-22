@@ -4,6 +4,7 @@
 ## EDU LAB HOME — CURRENT PROJECT CONTEXT
 
 - Current baseline: **EduLab Home V5 Refined**, a static Vite portal for five independently deployed products: ChemLab, PhysicsLab, MathLab, BioLab and ITLab. It does not contain their source code.
+- Exa (online assessment platform) has its own `#exa` section, header link and footer entry, configured only through `VITE_EXA_URL`. It is not a sixth Lab: never add it to `LABS`, the Knowledge Galaxy or the five-Lab counts, and never invent its URL.
 - Read `docs/PROJECT_CONTEXT.md` and `README.md` before modifying feature code. `src/main.js` is the application entry point.
 - Keep the Earth/Venus/Mars hero, local poster fallbacks in `public/assets/`, the official logo, and the motion lifecycle intact unless the task explicitly changes them. Do not add gradients or invent Lab URLs.
 - The motion controller is button-independent. It initializes once through `initializeMotionSystem()` after feature modules attach listeners.

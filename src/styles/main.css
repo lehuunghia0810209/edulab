@@ -1,6 +1,3 @@
-/* ==========================================================================
-       1. DESIGN TOKENS & SOLID COLOR SYSTEM (ABSOLUTELY NO GRADIENTS)
-       ========================================================================== */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -34,13 +31,11 @@
       transition: background-color 0.25s var(--e-std), color 0.25s var(--e-std);
     }
 
-    /* Focus states */
     :focus-visible {
       outline: 2px solid var(--brand-teal);
       outline-offset: 4px;
     }
 
-    /* Skip Link */
     .skip-link {
       position: fixed;
       top: -100px;
@@ -58,7 +53,6 @@
       top: 16px;
     }
 
-    /* Scroll Progress Bar (Top) */
     .scroll-progress {
       position: fixed;
       top: 0;
@@ -72,7 +66,6 @@
       pointer-events: none;
     }
 
-    /* Layout Helpers */
     .container {
       width: 100%;
       max-width: var(--max-w);
@@ -132,7 +125,6 @@
       line-height: 1.65;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -199,9 +191,6 @@
       cursor: pointer;
     }
 
-    /* ==========================================================================
-       2. HEADER & STICKY NAVIGATION
-       ========================================================================== */
     .site-header {
       position: fixed;
       top: 0;
@@ -392,7 +381,6 @@
       font-size: 0.9375rem;
     }
 
-    /* Mobile Hamburger Button */
     .burger-btn {
       display: none;
       width: 44px;
@@ -426,10 +414,6 @@
       transform: translateY(-7px) rotate(-45deg);
     }
 
-    /* ==========================================================================
-       3. 3D KNOWLEDGE NEXUS
-       ========================================================================== */
-    /* RIGHT ZONE: 3D Knowledge Nexus */
     .nexus-stage {
       position: relative;
       display: flex;
@@ -512,7 +496,6 @@
       transform: translate(-50%, 0) scale(1.06);
     }
 
-    /* Orbital Geometric Rings (Solid borders) */
     .nexus-ring {
       position: absolute;
       border-radius: 50%;
@@ -542,7 +525,6 @@
       border-color: #79DCE8;
     }
 
-    /* SVG Connecting Spokes */
     .nexus-spokes {
       position: absolute;
       inset: 0;
@@ -564,7 +546,6 @@
       stroke-dasharray: none;
     }
 
-    /* Central Dimensional Core */
     .nexus-core {
       position: relative;
       z-index: 4;
@@ -621,7 +602,6 @@
       color: var(--text-primary);
     }
 
-    /* 5 Surrounding Subject Nodes (Pentagon Arrangement) */
     .nexus-node {
       position: absolute;
       z-index: 5;
@@ -665,7 +645,6 @@
       color: rgba(255, 255, 255, 0.66);
     }
 
-    /* Pentagon Node Coordinates */
     .nexus-node[data-lab="chemlab"]    { top: 2%;   left: 50%; transform: translate(-50%, 0) translateZ(20px); }
     .nexus-node[data-lab="physicslab"] { top: 28%;  left: 88%; transform: translate(-50%, -50%) translateZ(24px); }
     .nexus-node[data-lab="mathlab"]    { top: 82%;  left: 74%; transform: translate(-50%, -50%) translateZ(16px); }
@@ -689,7 +668,6 @@
       color: #07161D;
     }
 
-    /* Hero Nexus Interactive HUD Readout Card */
     .nexus-hud {
       width: 100%;
       max-width: 520px;
@@ -797,9 +775,6 @@
       50% { transform: translateZ(36px) translateY(-8px); }
     }
 
-    /* ==========================================================================
-       4. CINEMATIC ENTRANCE ANIMATION (Runs once, cleans up DOM classes)
-       ========================================================================== */
     @keyframes ent-reveal {
       from { transform: translateY(115%); }
       to { transform: translateY(0); }
@@ -843,7 +818,6 @@
     .anim.play .brand-link        { animation: ent-rise 0.6s var(--e-quint) 0.15s both; }
     .anim.play .nav-menu          { animation: ent-rise 0.6s var(--e-quint) 0.22s both; }
     .anim.play .header-actions    { animation: ent-settle 0.6s var(--e-quint) 0.28s both; }
-    /* Scroll Reveal for Subsequent Sections */
     .reveal-section {
       opacity: 1;
       transform: none;
@@ -854,9 +828,6 @@
       transform: translateY(24px);
     }
 
-    /* ==========================================================================
-       5. SECTION 3: LAB DISCOVERY (THE FIVE LABS — ASYMMETRICAL EDITORIAL GRID)
-       ========================================================================== */
     .section-header-row {
       display: flex;
       flex-wrap: wrap;
@@ -886,7 +857,6 @@
       transition: transform 0.3s var(--e-quint), border-color 0.25s var(--e-std), background-color 0.25s var(--e-std);
     }
 
-    /* Asymmetrical Editorial Layout: First 2 cards span 3 columns each, bottom 3 span 2 columns each */
     .lab-card:nth-child(1),
     .lab-card:nth-child(2) {
       grid-column: span 3;
@@ -1017,9 +987,6 @@
       background-color: var(--brand-teal);
     }
 
-    /* ==========================================================================
-       6. SECTION 4: INTERACTIVE LAB EXPLORER (SEARCH, FILTER & PREVIEW PANEL)
-       ========================================================================== */
     .explorer-controls {
       display: flex;
       flex-wrap: wrap;
@@ -1202,7 +1169,6 @@
       color: var(--text-secondary);
     }
 
-    /* Empty Search State */
     .explorer-empty {
       background-color: var(--surface-primary);
       border: 1px dashed var(--border-strong);
@@ -1221,7 +1187,6 @@
       margin-bottom: 16px;
     }
 
-    /* Right Preview Panel */
     .explorer-preview-panel {
       background-color: var(--surface-primary);
       border: 1px solid var(--border-primary);
@@ -1324,9 +1289,6 @@
       border-top: 1px solid var(--border-primary);
     }
 
-    /* ==========================================================================
-       7. SECTION 5: EDULAB PHILOSOPHY / ABOUT (EDITORIAL HORIZONTAL PILLARS)
-       ========================================================================== */
     .philosophy-list {
       margin-top: 48px;
       border-top: 1px solid var(--border-primary);
@@ -1376,9 +1338,6 @@
       color: var(--brand-blue);
     }
 
-    /* ==========================================================================
-       8. SECTION 6: HOW EDULAB WORKS (4-STEP CONNECTING TIMELINE)
-       ========================================================================== */
     .steps-timeline {
       margin-top: 56px;
       display: grid;
@@ -1444,9 +1403,6 @@
       line-height: 1.6;
     }
 
-    /* ==========================================================================
-       9. SECTION 7: ECOSYSTEM OVERVIEW (INTERACTIVE ARCHITECTURE DIAGRAM)
-       ========================================================================== */
     .eco-architecture {
       margin-top: 48px;
       background-color: var(--surface-primary);
@@ -1491,7 +1447,6 @@
       margin-top: 4px;
     }
 
-    /* Structural Connector Trunk & Branch Bar */
     .eco-trunk-line {
       width: 2px;
       height: 40px;
@@ -1569,9 +1524,6 @@
       gap: 20px;
     }
 
-    /* ==========================================================================
-       10. SECTION 8: FAQ ACCORDION
-       ========================================================================== */
     .faq-layout {
       display: grid;
       grid-template-columns: 5fr 7fr;
@@ -1646,25 +1598,6 @@
       display: none;
     }
 
-    /* ==========================================================================
-       11. SECTION 9 & 10: FINAL CTA & MULTI-COLUMN FOOTER
-       ========================================================================== */
-    .final-cta-box {
-      background-color: var(--surface-primary);
-      border: 2px solid var(--border-primary);
-      border-radius: 24px;
-      padding: clamp(40px, 6vw, 80px);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: var(--shadow-solid);
-    }
-
-    .final-cta-box .section-desc {
-      margin-bottom: 32px;
-    }
-
     .site-footer {
       background-color: var(--bg-secondary);
       padding-top: 72px;
@@ -1735,7 +1668,6 @@
       font-size: 0.875rem;
     }
 
-    /* Back to Top Floating Button */
     .back-to-top {
       position: fixed;
       right: 24px;
@@ -1763,7 +1695,6 @@
       transform: translateY(0);
     }
 
-    /* Accessible Feedback Toast (for unconfigured Lab URLs) */
     .status-toast {
       position: fixed;
       bottom: 24px;
@@ -1790,7 +1721,3 @@
       visibility: visible;
       transform: translateX(-50%) translateY(0);
     }
-
-    /* ==========================================================================
-       12. RESPONSIVE BREAKPOINTS (320px -> 2560px)
-       ========================================================================== */

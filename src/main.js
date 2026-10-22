@@ -3,6 +3,7 @@ import './styles/main.css';
 import './styles/responsive.css';
 import './styles/planet-hero.css';
 import './styles/living-universe.css';
+import './styles/exa.css';
 import { initEntranceAnimation, initFooterYear, initScrollReveals } from './modules/animations.js';
 import { renderLabDiscoveryAndFooter } from './modules/discovery.js';
 import { initEcosystemDiagram } from './modules/ecosystem.js';

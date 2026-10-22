@@ -1,0 +1,101 @@
+.exa-panel { position: relative; padding: clamp(28px, 5vw, 72px); border: 1px solid var(--border-strong); border-radius: 32px; background: var(--panel-tint); overflow: hidden; }
+.exa-panel::before { content: ""; position: absolute; top: -1px; left: clamp(28px, 5vw, 72px); width: 120px; height: 2px; background: var(--brand-teal); }
+.exa-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(32px, 5vw, 88px); }
+.exa-copy { max-width: 600px; }
+.exa-product { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; margin: 20px 0 12px; }
+.exa-wordmark { font: 400 clamp(3.2rem, 5.4vw, 4.6rem)/.95 var(--font-serif); color: var(--brand-teal); letter-spacing: -.02em; }
+.exa-kind { font: 600 .74rem var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--text-secondary); }
+.exa-section .section-title { font-size: clamp(2.05rem, 3.4vw, 3.3rem); max-width: 600px; }
+.exa-section .section-desc { font-size: clamp(1rem, 1.2vw, 1.12rem); }
+.exa-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 28px; margin-top: 34px; }
+.exa-actions .btn { min-height: 52px; padding: 14px 30px; font-size: .95rem; }
+.exa-cta-note { flex-basis: 100%; margin-top: -4px; font-size: .82rem; color: var(--text-muted); }
+
+.exa-stage { position: relative; width: 100%; max-width: 680px; justify-self: center; aspect-ratio: 560 / 460; perspective: 1100px; }
+.exa-scene { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(6deg) rotateY(-8deg); animation: exa-sway 18s ease-in-out -9s infinite alternate; }
+.exa-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+.exa-layer-orbits { transform: translateZ(-90px) scale(1.12); }
+.exa-layer-card { display: grid; place-items: center; transform: translateX(-6%) translateZ(0); }
+.exa-layer-result { inset: auto 0 6% auto; width: 40%; height: auto; transform: translateZ(70px); }
+.exa-layer-tokens { transform: translateZ(110px) scale(.86); }
+
+.exa-orbit { transform-box: view-box; transform-origin: 280px 230px; animation: orbit-turn 70s linear infinite; }
+.exa-orbit-reverse { animation-duration: 96s; animation-direction: reverse; }
+.exa-orbit ellipse { stroke: var(--border-strong); stroke-width: 1; opacity: .7; }
+.exa-orbit-dot { fill: var(--brand-teal); }
+.exa-link-track { stroke: var(--border-primary); stroke-width: 1; }
+.exa-link { stroke: var(--brand-teal); stroke-width: 1.2; stroke-dasharray: 6 20; opacity: .7; animation: exa-link-flow 6s linear infinite; }
+
+.exa-card { width: 56%; height: auto; overflow: visible; animation: exa-float 7s ease-in-out -3s infinite alternate; }
+.exa-result { width: 100%; height: auto; overflow: visible; animation: exa-float 8.5s ease-in-out -6s infinite alternate-reverse; }
+.exa-card-body { fill: var(--surface-primary); stroke: var(--border-strong); }
+.exa-card-rule { stroke: var(--border-primary); }
+.exa-bar { fill: var(--border-primary); }
+.exa-bar-strong { fill: var(--border-strong); }
+.exa-scan { fill: var(--brand-teal); fill-opacity: .08; stroke: var(--brand-teal); stroke-opacity: .45; animation: exa-scan 12s cubic-bezier(.65, 0, .35, 1) -8s infinite; }
+.exa-row circle { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+.exa-row.is-done > circle { fill: var(--brand-teal); stroke: var(--brand-teal); }
+.exa-tick { fill: none; stroke: var(--bg-primary); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.exa-progress-track { fill: none; stroke: var(--border-primary); stroke-width: 4; }
+.exa-progress { fill: none; stroke: var(--brand-teal); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 44; animation: exa-progress 12s ease-in-out -8s infinite; }
+.exa-progress-alt { stroke: var(--accent-cream); animation: exa-score 9s ease-in-out -5s infinite alternate; }
+.exa-row .exa-focus { stroke: var(--brand-teal); transform-box: fill-box; transform-origin: center; animation: exa-focus 2.4s ease-in-out infinite alternate; }
+.exa-row .exa-check circle { fill: var(--brand-teal); stroke: var(--brand-teal); }
+.exa-check { opacity: 1; transform-box: fill-box; transform-origin: center; animation: exa-check 12s ease-in-out -8s infinite; }
+.exa-column { fill: var(--border-strong); transform-box: fill-box; transform-origin: 50% 100%; animation: exa-column 6s ease-in-out var(--d) infinite alternate; }
+.exa-column.is-latest { fill: var(--brand-teal); }
+
+.exa-token { position: absolute; left: var(--x); top: var(--y); width: 44px; height: 44px; margin: -22px 0 0 -22px; display: grid; place-items: center; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--bg-secondary); color: var(--text-secondary); font: 600 .9rem var(--font-display); animation: exa-bob 6.5s ease-in-out var(--d) infinite alternate; }
+.exa-token.is-correct { border-color: var(--brand-teal); color: var(--brand-teal); }
+.exa-token.is-dot { width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 0; background: var(--brand-teal); opacity: .75; animation-duration: 8s; }
+
+.exa-capabilities { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(40px, 5vw, 64px); border-top: 1px solid var(--border-primary); }
+.exa-capabilities li { display: grid; align-content: start; gap: 8px; padding: 28px clamp(16px, 2vw, 28px) 4px; border-left: 1px solid var(--border-primary); }
+.exa-capabilities li:first-child { border-left: 0; padding-left: 0; }
+.exa-capabilities svg { width: 26px; height: 26px; margin-bottom: 8px; color: var(--brand-teal); }
+.exa-capabilities strong { font: 600 1.05rem var(--font-body); color: var(--text-primary); }
+.exa-capabilities span { font-size: .9rem; line-height: 1.55; color: var(--text-secondary); }
+
+.exa-ecosystem { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 22px; margin-top: 36px; padding: 20px 24px; border: 1px solid var(--border-primary); border-radius: 20px; background: var(--bg-primary); }
+.exa-ecosystem-label { font: 600 .66rem var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--text-muted); }
+.exa-eco-group, .exa-eco-target { display: grid; gap: 8px; }
+.exa-eco-kicker { font: 600 .62rem var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--text-secondary); }
+.exa-eco-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.exa-eco-chips span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--border-primary); border-radius: 99px; font-size: .78rem; color: var(--text-primary); }
+.exa-eco-chips span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lab-accent); }
+.exa-eco-connector { flex: 1 1 40px; min-width: 40px; height: 1px; position: relative; background: var(--border-strong); }
+.exa-eco-connector::after { content: ""; position: absolute; right: -1px; top: -4px; width: 9px; height: 9px; border-top: 1px solid var(--border-strong); border-right: 1px solid var(--border-strong); transform: rotate(45deg); }
+.exa-eco-target strong { display: inline-flex; align-items: center; justify-content: center; min-width: 96px; padding: 6px 18px; border: 1px solid var(--brand-teal); border-radius: 99px; font: 400 1.35rem/1.2 var(--font-serif); color: var(--brand-teal); }
+
+@keyframes exa-sway { from { transform: rotateX(10deg) rotateY(-14deg); } to { transform: rotateX(3deg) rotateY(10deg); } }
+@keyframes exa-float { from { transform: translateY(-8px); } to { transform: translateY(8px); } }
+@keyframes exa-bob { from { transform: translate(-6px, 6px); } to { transform: translate(6px, -8px); } }
+@keyframes exa-link-flow { to { stroke-dashoffset: -104; } }
+@keyframes exa-scan { 0%, 20% { transform: translateY(0); } 25%, 45% { transform: translateY(64px); } 50%, 70% { transform: translateY(128px); } 75%, 95% { transform: translateY(192px); } 100% { transform: translateY(0); } }
+@keyframes exa-progress { 0%, 22% { stroke-dashoffset: 82; } 30%, 47% { stroke-dashoffset: 62; } 55%, 72% { stroke-dashoffset: 44; } 80%, 94% { stroke-dashoffset: 24; } 100% { stroke-dashoffset: 82; } }
+@keyframes exa-score { from { stroke-dashoffset: 58; } to { stroke-dashoffset: 18; } }
+@keyframes exa-check { 0%, 52% { opacity: 0; transform: scale(.6); } 60%, 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(.6); } }
+@keyframes exa-focus { from { transform: scale(1); opacity: 1; } to { transform: scale(1.35); opacity: .35; } }
+@keyframes exa-column { from { transform: scaleY(.32); } to { transform: scaleY(1); } }
+
+@media (max-width: 1030px) {
+  .exa-layout { grid-template-columns: 1fr; }
+  .exa-copy { max-width: 680px; }
+  .exa-stage { max-width: 600px; }
+  .exa-capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .exa-capabilities li:nth-child(3) { border-left: 0; padding-left: 0; }
+  .exa-capabilities li:nth-child(n + 3) { border-top: 1px solid var(--border-primary); }
+}
+@media (max-width: 599px) {
+  .exa-panel { border-radius: 24px; padding: 28px 20px; }
+  .exa-capabilities { grid-template-columns: 1fr; }
+  .exa-capabilities li { border-left: 0; padding: 22px 0 6px; }
+  .exa-capabilities li + li { border-top: 1px solid var(--border-primary); }
+  .exa-ecosystem { flex-direction: column; align-items: flex-start; padding: 18px; }
+  .exa-eco-connector { flex: 0 0 24px; min-width: 0; width: 1px; height: 24px; margin-left: 12px; }
+  .exa-eco-connector::after { right: -4px; top: auto; bottom: -1px; transform: rotate(135deg); }
+  .exa-token { width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 11px; font-size: .78rem; }
+  .exa-layer-orbits { transform: translateZ(-60px) scale(1.04); }
+  .exa-layer-tokens { transform: translateZ(60px) scale(.8); }
+  .exa-layer-result { width: 44%; transform: translateZ(50px); }
+}

@@ -23,7 +23,6 @@ export function initHeroNexus() {
   let webgl = null;
 
   function updateNexusSelection(labId) {
-    /* Toggle reversible selection */
     if (selectedLabId === labId) {
       selectedLabId = null;
     } else {
@@ -120,7 +119,6 @@ export function initHeroNexus() {
     observer.observe(viewport);
   }
 
-  /* Subtle Pointer Parallax on Fine-Pointer Desktops (Respects Reduced Motion) */
   const canParallax = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
 
   if (canParallax && viewport) {
