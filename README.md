@@ -33,7 +33,7 @@ Kiểm tra tương tác thật trên Chrome:
 npm run test:e2e
 ```
 
-Bộ kiểm thử tự mở một Vite server riêng tại `http://127.0.0.1:5187/`, dùng URL giả `https://example.org/chem` cho ChemLab và một URL sai cho PhysicsLab để xác nhận cả trạng thái hợp lệ, thiếu và sai định dạng. Ảnh và video QA được sinh trong `artifacts/`, một thư mục ignored và không chứa fixture cho production.
+Bộ kiểm thử tự mở Vite tại `http://127.0.0.1:5187/` (có thể tái sử dụng server sẵn có khi đặt `EDULAB_HOME_REUSE_SERVER=true`). Playwright dùng URL giả `https://example.org/chem` cho ChemLab và URL sai `::::` cho PhysicsLab trong môi trường kiểm thử để xác nhận trạng thái hợp lệ, thiếu và sai định dạng; các giá trị này chỉ nằm trong `playwright.config.js`, không phải cấu hình production. Kết quả Playwright mặc định nằm trong `test-results/` (có thể đổi bằng `EDULAB_HOME_TEST_OUTPUT_DIR`); ảnh bằng chứng lưu tại `EDULAB_HOME_QA_DIR` hoặc mặc định `test-results/visual-evidence/`. Các thư mục output này bị ignore và tách khỏi runtime assets.
 
 Build được tạo trong `dist/`; preview mặc định chạy tại `http://127.0.0.1:4173/`.
 

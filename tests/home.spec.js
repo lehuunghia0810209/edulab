@@ -1,4 +1,41 @@
 import { test, expect } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+
+const screenshotDir = process.env.EDULAB_HOME_QA_DIR || 'test-results/visual-evidence';
+test.beforeAll(async () => mkdir(screenshotDir, { recursive: true }));
+
+async function revealPageSections(page) {
+  const sections = page.locator('.reveal-section');
+  for (let index = 0; index < await sections.count(); index += 1) {
+    const section = sections.nth(index);
+    await section.scrollIntoViewIfNeeded();
+    await expect(section).toHaveClass(/is-visible/);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
+test('official EduLab identity and social metadata use the confirmed Home URL', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await expect(page).toHaveTitle(/EduLab — Education Laboratory/);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://edulab-education.pages.dev/');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://edulab-education.pages.dev/brand/edulab-og.png');
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', 'https://edulab-education.pages.dev/brand/edulab-og.png');
+  await expect(page.locator('link[rel="icon"][sizes="32x32"]')).toHaveAttribute('href', '/brand/edulab-icon-32.png');
+  const ogImage = await page.request.get('/brand/edulab-og.png');
+  const favicon = await page.request.get('/brand/edulab-icon-32.png');
+  expect(ogImage.ok()).toBeTruthy();
+  expect(favicon.ok()).toBeTruthy();
+  await expect(page.locator('.lab-card')).toHaveCount(5);
+  await revealPageSections(page);
+  await expect(page.locator('.reveal-section:not(.is-visible)')).toHaveCount(0);
+  await page.screenshot({ path: `${screenshotDir}/home-brand-desktop.png`, fullPage: true, animations: 'disabled' });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator('#burger-btn')).toBeVisible();
+  await expect(page.locator('.lab-card')).toHaveCount(5);
+  await page.screenshot({ path: `${screenshotDir}/home-brand-mobile.png`, fullPage: true, animations: 'disabled' });
+});
 
 test('desktop navigation and core controls', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -190,16 +227,17 @@ test('WebGL context loss retains fallback and restores the scene', async ({ page
 
 test('reduced motion, responsive widths and screenshots', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto('/');
   for (const [width, height] of [[320, 700], [360, 780], [375, 812], [390, 844], [430, 932], [580, 900], [768, 1024], [1024, 768], [1280, 800], [1440, 900], [1920, 1080], [2560, 1440], [1024, 600], [390, 560]]) {
     await page.setViewportSize({ width, height });
-    await page.goto('/');
     await expect(page.locator('.planet-title')).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
     if ([320, 390, 768, 1024, 1440, 1920].includes(width)) {
-      await page.screenshot({ path: `artifacts/home-${width}.png`, fullPage: true });
+      await page.screenshot({ path: `${screenshotDir}/home-${width}.png`, fullPage: true });
     }
     if ([320, 390, 768, 1024, 1440, 1920].includes(width)) {
-      await page.locator('.planet-hero').screenshot({ path: `artifacts/hero-${width}-${height}.png` });
+      await page.locator('.planet-hero').screenshot({ path: `${screenshotDir}/hero-${width}-${height}.png` });
     }
   }
   await page.locator('.nexus-node[data-lab="mathlab"]').click();
@@ -216,19 +254,19 @@ test('normal motion visual states', async ({ page }) => {
     }
     await page.locator('#top').scrollIntoViewIfNeeded();
     await page.waitForTimeout(2200);
-    await page.screenshot({ path: `artifacts/normal-${width}.png`, fullPage: true });
-    await page.locator('.planet-hero').screenshot({ path: `artifacts/hero-normal-${width}.png` });
+    await page.screenshot({ path: `${screenshotDir}/normal-${width}.png`, fullPage: true });
+    await page.locator('.planet-hero').screenshot({ path: `${screenshotDir}/hero-normal-${width}.png` });
     await page.locator('.nexus-node[data-lab="physicslab"]').click();
-    await page.locator('.nexus-stage').screenshot({ path: `artifacts/nexus-selected-${width}.png` });
+    await page.locator('.nexus-stage').screenshot({ path: `${screenshotDir}/nexus-selected-${width}.png` });
     if (width === 390) {
       await page.locator('#burger-btn').click();
       await page.waitForTimeout(300);
       expect(await page.evaluate(() => document.elementFromPoint(200, 500)?.closest('#primary-nav') !== null)).toBe(true);
-      await page.screenshot({ path: 'artifacts/mobile-menu.png' });
+      await page.screenshot({ path: `${screenshotDir}/mobile-menu.png` });
     } else {
       await page.locator('#theme-toggle').click();
       await page.waitForTimeout(300);
-      await page.screenshot({ path: 'artifacts/light-hero.png' });
+      await page.screenshot({ path: `${screenshotDir}/light-hero.png` });
     }
   }
 });
@@ -256,17 +294,17 @@ test('planet switcher is reversible and keeps labels, artwork and media in sync'
   await assertState('earth', 'venus', 'mars');
   await expect(hero.locator('video[src]')).toHaveCount(1);
   await page.waitForTimeout(2200);
-  await hero.screenshot({ path: 'artifacts/planet-earth.png' });
+  await hero.screenshot({ path: `${screenshotDir}/planet-earth.png` });
   await right.click();
   await assertState('mars', 'earth', 'venus');
   await page.waitForTimeout(700);
-  await hero.screenshot({ path: 'artifacts/planet-mars.png' });
+  await hero.screenshot({ path: `${screenshotDir}/planet-mars.png` });
   await left.click();
   await assertState('earth', 'venus', 'mars');
   await left.click();
   await assertState('venus', 'earth', 'mars');
   await page.waitForTimeout(700);
-  await hero.screenshot({ path: 'artifacts/planet-venus.png' });
+  await hero.screenshot({ path: `${screenshotDir}/planet-venus.png` });
   await right.click();
   await assertState('mars', 'earth', 'venus');
   await right.click();
@@ -279,7 +317,7 @@ test('planet switcher is reversible and keeps labels, artwork and media in sync'
   await page.keyboard.press('Enter');
   await assertState('mars', 'earth', 'venus');
   await page.waitForTimeout(700);
-  await hero.screenshot({ path: 'artifacts/planet-mobile-mars.png' });
+  await hero.screenshot({ path: `${screenshotDir}/planet-mobile-mars.png` });
   await page.setViewportSize({ width: 320, height: 700 });
   await left.click();
   await assertState('earth', 'venus', 'mars');
@@ -344,6 +382,7 @@ test('core Lab content and configured links work without JavaScript', async ({ b
 });
 
 test('Explorer selection produces observable motion feedback', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   await page.locator('#bo-kham-pha').scrollIntoViewIfNeeded();
   await page.locator('.explorer-tab-item[data-lab="itlab"]').click();
@@ -417,7 +456,7 @@ test('all hero media can fail without broken-image UI', async ({ page }) => {
   await expect(page.locator('.planet-primary-cta')).toBeVisible();
 });
 
-test('Exa is a separate assessment platform with truthful unconfigured state', async ({ page }) => {
+test('Exa remains a separate assessment platform with its existing link', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
   await expect(page.locator('.lab-card')).toHaveCount(5);
@@ -430,12 +469,10 @@ test('Exa is a separate assessment platform with truthful unconfigured state', a
   await expect(page.locator('.nav-link[href="#exa"]')).toHaveClass(/is-active/);
   const order = await page.locator('main > section').evaluateAll(sections => sections.map(section => section.id));
   expect(order.indexOf('exa')).toBe(order.indexOf('bo-kham-pha') + 1);
-  const action = page.locator('#exa-action-slot button');
-  await expect(action).toHaveText('Chưa cập nhật liên kết');
-  await expect(page.locator('#exa-action-slot a')).toHaveCount(0);
-  await action.click();
-  await expect(page.locator('#status-toast')).toContainText('Exa');
-  await expect(page.locator('#footer-exa-links button')).toContainText('Exa');
+  const action = page.locator('#exa-action-slot a');
+  await expect(action).toHaveAttribute('href', 'https://exa-edulab.pages.dev/');
+  await expect(page.locator('#exa-action-slot button')).toHaveCount(0);
+  await expect(page.locator('#footer-exa-links a')).toHaveAttribute('href', 'https://exa-edulab.pages.dev/');
   await expect(page.locator('#footer-contact')).toBeHidden();
 });
 

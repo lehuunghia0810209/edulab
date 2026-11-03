@@ -30,7 +30,7 @@ export const LABS = [
     id: "biolab",
     name: "BioLab",
     subject: "Sinh học",
-    url: import.meta.env.VITE_BIOLAB_URL || "",
+    url: import.meta.env.VITE_BIOLAB_URL || "https://biolab-edulab.pages.dev/",
     description: "Tìm hiểu thế giới sự sống.",
     icon: "dna",
     category: "science"
@@ -39,7 +39,7 @@ export const LABS = [
     id: "itlab",
     name: "ITLab",
     subject: "Tin học",
-    url: import.meta.env.VITE_ITLAB_URL || "",
+    url: import.meta.env.VITE_ITLAB_URL || "https://itlabedulab.pages.dev/",
     description: "Khám phá lập trình và công nghệ.",
     icon: "code",
     category: "logic"

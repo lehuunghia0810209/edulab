@@ -17,6 +17,9 @@ const samples = [
   ['exa tokens', '.exa-token'],
   ['footer', '.site-footer .motif-orbit'],
 ];
+const motionEvidenceDir = process.env.EDULAB_HOME_QA_DIR
+  ? `${process.env.EDULAB_HOME_QA_DIR}/motion`
+  : 'test-results/visual-evidence/motion';
 const read = element => {
   const s = getComputedStyle(element);
   const matrix = new DOMMatrix(s.transform);
@@ -51,8 +54,8 @@ for (const width of [1440, 390]) {
       expect(difference(initial,after5), `${name}: 5s`).toBeGreaterThan(.04);
       results.push({name,initial,after2,after5});
     }
-    await mkdir('artifacts/v5-refined/after',{recursive:true});
-    await writeFile(`artifacts/v5-refined/after/samples-${width}.json`,JSON.stringify(results,null,2));
+    await mkdir(motionEvidenceDir,{recursive:true});
+    await writeFile(`${motionEvidenceDir}/samples-${width}.json`,JSON.stringify(results,null,2));
   });
 }
 
