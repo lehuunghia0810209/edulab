@@ -95,7 +95,7 @@ Logo chính thức duy nhất nằm trong `public/assets/edulab-logo.png` và đ
 
 ## Cấu hình liên kết Lab
 
-Metadata, mô tả và URL của năm Lab được quản lý tập trung trong `src/data/labs.js`; artwork SVG dùng chung nằm trong `src/data/artwork.js`. Đích đến không mặc định trỏ vào các thư mục sibling trong workspace; một bản build độc lập không thể dựa vào chúng. Chỉ URL tuyệt đối dùng HTTP hoặc HTTPS mới được chấp nhận. URL bỏ trống hiển thị trạng thái **“Chưa cập nhật liên kết”**; URL sai định dạng được bỏ qua riêng cho Lab đó và ghi cảnh báo trong console, trong khi các Lab còn lại vẫn hoạt động.
+Metadata, mô tả và URL của năm Lab được quản lý tập trung trong `src/data/labs.js`; artwork SVG dùng chung nằm trong `src/data/artwork.js`. Đích đến không trỏ vào các thư mục sibling trong workspace; một bản build độc lập không thể dựa vào chúng. Năm URL fallback hiện có trong `labs.js` cũng được dùng cho liên kết HTML tĩnh, nên các Lab vẫn có thể mở khi JavaScript tắt. Giá trị `VITE_*_URL` hợp lệ sẽ ghi đè fallback; chỉ URL tuyệt đối dùng HTTP hoặc HTTPS mới được chấp nhận. URL cấu hình sai định dạng bị bỏ qua riêng cho Lab đó và ghi cảnh báo trong console, trong khi các Lab còn lại vẫn hoạt động.
 
 Tạo `.env.local` từ `.env.example` và điền URL của các website đã triển khai:
 

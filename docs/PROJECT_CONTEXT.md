@@ -16,7 +16,7 @@ Exa **không phải Lab thứ sáu**: không nằm trong `LABS`, Knowledge Galax
 - Runtime assets: logo và poster Earth/Venus/Mars nằm trong `public/assets/` và được tham chiếu bằng `/assets/...`. Poster là fallback khi video/CDN không sẵn sàng.
 - Exa là một panel riêng: phần copy, visual 2.5D, bốn năng lực (luyện tập, làm bài kiểm tra, đánh giá năng lực, theo dõi tiến trình) và dải “5 phòng Lab → Exa”. Không thêm tính năng nào chưa được xác nhận.
 - Thứ tự section: Hero `#top` → `#kham-pha-lab` → `#nexus` → `#bo-kham-pha` → `#exa` → `#ve-edulab` → `#cach-hoat-dong` → `#he-sinh-thai` → `#faq` → footer. CTA cuối “Hành trình khám phá bắt đầu từ đây” đã bị bỏ có chủ đích; không thêm lại.
-- `discovery.js` render thẻ Lab, danh sách sản phẩm ở footer (5 Lab + Exa), nút “Vào Exa” và mục Liên hệ tùy chọn. `index.html` chứa sẵn `<span data-lab-url="VITE_*_URL">`; plugin `staticLabLinks` trong `vite.config.js` biến chúng thành link khi build để nội dung vẫn dùng được khi tắt JavaScript.
+- `discovery.js` render thẻ Lab, danh sách sản phẩm ở footer (5 Lab + Exa), nút “Vào Exa” và mục Liên hệ tùy chọn. `index.html` chứa sẵn `<span data-lab-url="VITE_*_URL">`; plugin `staticLabLinks` trong `vite.config.js` biến năm Lab thành link tĩnh khi build, dùng URL cấu hình hợp lệ hoặc cùng fallback đã có trong `labs.js`, để điều hướng Lab vẫn hoạt động khi tắt JavaScript. Cơ chế URL Exa không đổi.
 - Script inline trong `<head>` đặt `data-theme`, `data-motion` và class `anim` trước lần paint đầu tiên (tránh nháy giao diện). Logic preference của nó phải luôn khớp với `readPreference()` trong `motion-controller.js`.
 
 ## Typography

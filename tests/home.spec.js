@@ -376,7 +376,7 @@ test('core Lab content and configured links work without JavaScript', async ({ b
   await page.goto('/');
   await expect(page.locator('.lab-card')).toHaveCount(5);
   await expect(page.locator('.lab-card').first().getByRole('link')).toHaveAttribute('href', 'https://example.org/chem');
-  await expect(page.locator('#footer-lab-links').getByRole('link')).toHaveAttribute('href', 'https://example.org/chem');
+  await expect(page.locator('#footer-lab-links a[href="https://example.org/chem"]')).toHaveCount(1);
   await expect(page.locator('.no-js-note')).toBeVisible();
   await context.close();
 });
