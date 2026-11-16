@@ -39,7 +39,7 @@ export const LABS = [
     id: "itlab",
     name: "ITLab",
     subject: "Tin học",
-    url: import.meta.env.VITE_ITLAB_URL || "https://itlabedulab.pages.dev/",
+    url: import.meta.env.VITE_ITLAB_URL || "https://it-edulab.pages.dev/",
     description: "Khám phá lập trình và công nghệ.",
     icon: "code",
     category: "logic"

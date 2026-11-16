@@ -5,7 +5,7 @@ const DEFAULT_LAB_URLS = Object.freeze({
   VITE_PHYSICSLAB_URL: 'https://physicslab-edulab.pages.dev/',
   VITE_MATHLAB_URL: 'https://mathlab-edulab.pages.dev/',
   VITE_BIOLAB_URL: 'https://biolab-edulab.pages.dev/',
-  VITE_ITLAB_URL: 'https://itlabedulab.pages.dev/',
+  VITE_ITLAB_URL: 'https://it-edulab.pages.dev/',
 });
 
 export function staticLabLinks(env) {
