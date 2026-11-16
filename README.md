@@ -62,7 +62,9 @@ EduLabHome/
 │   │   └── labs.js
 │   ├── modules/
 │   │   ├── animations.js
+│   │   ├── click-feedback.js
 │   │   ├── discovery.js
+│   │   ├── hero-particles.js
 │   │   ├── interactions.js
 │   │   ├── living-universe.js
 │   │   ├── motion-controller.js
@@ -80,6 +82,7 @@ EduLabHome/
 │   │   ├── living-universe.css
 │   │   ├── exa.css
 │   │   ├── premium.css
+│   │   ├── evolution.css
 │   │   └── tokens.css
 │   └── utils/
 │       └── helpers.js
@@ -87,6 +90,7 @@ EduLabHome/
 ├── package.json
 ├── playwright.config.js
 ├── tests/
+│   ├── evolution.spec.js
 │   ├── home.spec.js
 │   └── motion.spec.js
 └── vite.config.js
@@ -122,7 +126,7 @@ Không đưa thông tin bí mật vào biến `VITE_*`: các giá trị này đ�
 - Living Universe dùng SVG/CSS cho minh họa từng môn, Exa, mục Thông tin và footer. `motion-controller.js` cung cấp `initializeMotionSystem()`, `pauseMotion()`, `resumeMotion()`, `toggleMotion()` và `getMotionState()` cho SVG/CSS, WebGL và video Hero. Motion tự chạy khi tải trang; trạng thái `edulab-motion=paused` cũ bị bỏ qua, còn lựa chọn `running` được chuyển sang preference mới. Tùy chọn “Giảm chuyển động trang trí” ở footer lưu bằng khóa `edulab-reduce-motion`; chế độ hệ thống được áp dụng khi người dùng chưa chọn preference riêng, đồng thời tab ẩn và section ngoài màn hình vẫn tạm dừng motion.
 - Media hành tinh dùng URL từ tài liệu tham chiếu do người dùng cung cấp. Cần xác nhận quyền sử dụng và tính ổn định của CDN trước khi phát hành công khai.
 - `src/data/labs.js` là nguồn dữ liệu Lab; `src/modules/` chứa các hành vi theo trách nhiệm; `src/utils/helpers.js` chứa tiện ích dùng chung.
-- Các tệp style được nạp theo thứ tự design tokens, style nền tảng, responsive overrides, Hero SpaceEdu, `living-universe.css`, `exa.css`, rồi `premium.css` (mục Thông tin & Chính sách và lớp motion bổ sung).
+- Các tệp style được nạp theo thứ tự design tokens, style nền tảng, responsive overrides, Hero SpaceEdu, `living-universe.css`, `exa.css`, rồi `premium.css` (mục Thông tin & Chính sách và lớp motion bổ sung) và cuối cùng `evolution.css` (hạt Hero, tilt thẻ Lab, phản hồi click, scroll storytelling, giao diện Thông tin/footer).
 - Vite đưa URL Lab hợp lệ trực tiếp vào HTML build. Vì vậy nội dung và liên kết cốt lõi vẫn dùng được khi JavaScript bị tắt; JavaScript chỉ nâng cấp chúng thành Nexus, accordion và trạng thái tương tác đầy đủ. Khi không có JavaScript, mọi câu trả lời ở mục Thông tin đều hiển thị sẵn.
 
 ## Triển khai Cloudflare Pages

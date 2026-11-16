@@ -71,6 +71,21 @@ Cơ sở cho câu trả lời về dữ liệu trong mục Thông tin. Kiểm tr
 
 Tất cả chỉ dùng transform/opacity và tắt dưới `[data-motion="off"]`: vệt sáng chạy dọc mép trên mỗi section (chỉ chạy khi section có `.motion-running`), ánh sáng theo con trỏ trên thẻ Lab (`interactions.js`, một listener ủy quyền), sheen trên nút chính, dấu cộng gập thành dấu trừ ở accordion, và Hero lùi dần khi cuộn bằng `animation-timeline: scroll()` (chỉ ở trình duyệt hỗ trợ; nơi khác Hero đứng yên như cũ). Không thêm thư viện animation.
 
+## Evolution layer V6 (evolution.css, 2026-11)
+
+Lớp nâng cấp nằm sau `premium.css`, chỉ dùng transform/opacity hoặc các thuộc tính độc lập `translate`/`rotate`/`scale` để không xung đột với `transform` của scroll reveal (`.motion-item`). Tất cả tắt dưới `[data-motion="off"]`; không thêm gradient hay thư viện.
+
+- `hero-particles.js`: một canvas 2D (không phải WebGL thứ hai) sau `.planet-shade`, `pointer-events: none`, chỉ dành cho màn hình ≥ 768px có chuột/trackpad (`hover: hover` và `pointer: fine`). Hạt trôi quanh điểm gốc, tránh con trỏ có quán tính, nối đường mảnh khi gần nhau; click vào vùng trời trống (không phải link/button) tạo burst. Canvas chỉ được tạo khi trang đã `load` và rảnh (`requestIdleCallback`), vì riêng việc khởi tạo context 2D đã tạo long task lúc khởi động. Một vòng rAF, chỉ chạy khi Hero trong viewport, tab hiển thị và `canAnimate`; giảm motion thì giữ một frame tĩnh. Đường nối và điểm được gom theo mức opacity để mỗi frame chỉ có vài lệnh vẽ. Điện thoại/màn hình cảm ứng không tạo canvas (đo với CPU chậm 4×: +~340ms long task mà không có hover để tương tác); Hero ở đó giữ nguyên video hành tinh và mọi điều khiển.
+- `click-feedback.js`: một listener `pointerdown` ủy quyền, hiệu ứng theo ngữ cảnh (ripple cho CTA/nút chính, vòng quỹ đạo cho hành tinh, xung viền cho thẻ Lab, xoay icon theme, lò xo icon FAQ, nhấn nhẹ cho link). Không `preventDefault`, không chờ animation; phần tử hiệu ứng tự xóa.
+- `interactions.js`: ngoài ánh sáng theo con trỏ còn tính tilt ≤ 4° thành một trục-góc ghi vào `--tilt` cho thuộc tính `rotate`; reset khi rời thẻ. Chỉ chuột và khi motion bật; bàn phím có lift tương đương qua `:focus-within`.
+- Scroll storytelling thuần CSS (`animation-timeline: view()`, trong `@supports`, chỉ từ 768px trở lên): artwork thẻ Lab và Exa trôi theo chiều sâu, emblem xoay, tiêu đề section sáng dần từ `--text-muted` lên `--text-primary`. Không animation nào đưa opacity về 0, nên cuộn nhanh không làm mất nội dung; trình duyệt không hỗ trợ giữ trạng thái tĩnh.
+- Bài học hiệu năng: đừng đọc `scrollHeight`/layout trong lúc khởi tạo module. Một lần đồng bộ thanh tiến trình lúc khởi động (kể cả trong rAF) đã làm long task khởi động trên mobile tăng ~4 lần; `navigation.js` vì vậy giữ nguyên bản cũ.
+- Thông tin & Chính sách: accordion dạng thẻ có số thứ tự (CSS counter), thanh nhấn trái khi mở. Footer: tiêu đề cột có vạch nhấn, đường sáng mảnh ở mép trên. Nội dung chính sách không đổi.
+
+### Ghi chú test con lắc (đã đóng)
+
+Test “ambient artwork visibly changes…” từng thất bại ngẫu nhiên ở PhysicsLab. Đo trên baseline: animation luôn `running` và `currentTime` tăng đúng, nhưng con lắc dao động tuần hoàn (alternate 3.2s) nên hai mẫu đơn lẻ ở ~2.1s/~5.2s có thể nằm đối xứng quanh điểm quay đầu và cho cùng góc (3/12 lần dưới ngưỡng). Đây là lỗi lấy mẫu của test, không phải lỗi animation; test nay lấy mẫu mỗi 250ms trong từng cửa sổ 0–2s và 2–5s với cùng ngưỡng.
+
 ## Planet media
 
 `planet-hero.js` chỉ nạp video hành tinh đang được chọn. Video muted, loop và playsinline; `syncVideo()` dừng media khi Hero/tab không visible hoặc motion không được phép. Poster cục bộ vẫn phải tồn tại. Không thay playback rate, opacity hoặc nguồn CDN nếu task không yêu cầu.
@@ -96,4 +111,4 @@ npm run test:e2e
 
 - Hero video còn phụ thuộc CDN; poster cục bộ là fallback.
 - Three.js bundle vượt ngưỡng cảnh báo 500 kB của Vite.
-- Browser regression hiện dùng Chrome; Firefox, WebKit và thiết bị vật lý chưa nằm trong suite.
+- Bộ test mặc định dùng Chrome. Firefox và WebKit (Playwright trên Windows, không phải Safari thật) đã được chạy thủ công cho V6 bằng config tạm; thiết bị vật lý chưa được kiểm thử.
