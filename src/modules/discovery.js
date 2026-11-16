@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS, CONTACT_EMAIL, EXA, LABS, LAB_ILLUSTRATIONS } from '../data/labs.js';
+import { CATEGORY_LABELS, EXA, LABS, LAB_ILLUSTRATIONS } from '../data/labs.js';
 import { createLabActionElement, showStatusToast } from '../utils/helpers.js';
 
 export function renderLabDiscoveryAndFooter() {
@@ -90,15 +90,6 @@ export function renderLabDiscoveryAndFooter() {
       note.textContent = 'Liên kết tới Exa chưa được cấu hình trên trang này.';
       exaSlot.parentElement.append(note);
     }
-  }
-
-  const contact = document.getElementById('footer-contact');
-  if (contact && CONTACT_EMAIL) {
-    const link = document.createElement('a');
-    link.href = 'mailto:' + CONTACT_EMAIL;
-    link.textContent = 'Liên hệ';
-    contact.replaceChildren(link);
-    contact.hidden = false;
   }
 }
 

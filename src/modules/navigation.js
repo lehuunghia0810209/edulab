@@ -96,7 +96,7 @@ export function initNavigation() {
   }
 
   if ('IntersectionObserver' in window) {
-    const sections = ['top', 'kham-pha-lab', 'exa', 've-edulab', 'he-sinh-thai', 'faq']
+    const sections = ['top', 'kham-pha-lab', 'nexus', 'exa', 'faq']
       .map(function(id) { return document.getElementById(id); })
       .filter(Boolean);
 

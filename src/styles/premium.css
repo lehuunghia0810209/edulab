@@ -1,0 +1,155 @@
+/* Information & policies accordion, and the motion polish layered on the existing design.
+   Decorative motion here is transform/opacity only and stops under [data-motion="off"]. */
+
+/* ---------- Information & policies ---------- */
+.faq-intro { display: flex; flex-direction: column; }
+.faq-contact { list-style: none; display: grid; gap: 10px; margin: 28px 0 0; padding: 0; }
+.faq-contact-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  background: var(--panel-tint);
+  color: var(--text-primary);
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color var(--motion-fast) var(--e-std), background-color var(--motion-fast) var(--e-std);
+}
+.faq-contact-link svg { flex: none; width: 22px; height: 22px; color: var(--brand-teal); transition: transform var(--motion-base) var(--e-expo); }
+.faq-contact-link > span { display: grid; gap: 2px; min-width: 0; font-size: .95rem; overflow-wrap: anywhere; }
+.faq-contact-kind { font-family: var(--font-display); font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--text-muted); }
+.faq-contact-link:hover, .faq-contact-link:focus-visible { border-color: var(--brand-teal); }
+.faq-contact-link:hover svg, .faq-contact-link:focus-visible svg { transform: scale(1.12) rotate(-6deg); }
+
+.faq-question { display: grid; gap: 7px; min-width: 0; text-align: left; line-height: 1.4; }
+.faq-topic { font-family: var(--font-display); font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--brand-teal); }
+.faq-trigger { transition: background-color var(--motion-fast) var(--e-std); }
+.faq-trigger:hover { background: color-mix(in srgb, var(--brand-teal) 7%, transparent); }
+.faq-trigger:focus-visible { outline-offset: -3px; }
+
+/* Plus that folds into a minus: the vertical bar turns flat when the item opens. */
+.faq-icon-box { position: relative; width: 32px; height: 32px; border-color: var(--border-strong); transition: border-color var(--motion-fast) var(--e-std), background-color var(--motion-fast) var(--e-std); }
+.faq-icon-box::before, .faq-icon-box::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2px;
+  margin: -1px 0 0 -6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--motion-base) var(--e-expo);
+}
+.faq-icon-box::after { transform: rotate(90deg); }
+.faq-item.is-open .faq-icon-box { transform: none; border-color: var(--brand-teal); background: var(--brand-teal); color: var(--btn-ink); }
+[data-theme="light"] .faq-item.is-open .faq-icon-box { color: #fff; }
+.faq-item.is-open .faq-icon-box::after { transform: rotate(0deg); }
+.faq-trigger:hover .faq-icon-box { border-color: var(--brand-teal); }
+
+.faq-panel { padding: 0 66px 26px 18px; line-height: 1.7; }
+.faq-panel p + p { margin-top: 12px; }
+/* Without JavaScript nothing collapses (faq.js hides the panels), so the toggle icon is dropped. */
+body:not(.js-ready) .faq-icon-box { display: none; }
+.faq-panel strong { color: var(--text-primary); font-weight: 600; }
+.faq-panel .text-link { font-weight: 600; overflow-wrap: anywhere; }
+
+/* ---------- Light trail along each section's top edge ---------- */
+main > .section::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brand-teal), transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: light-trail 11s linear infinite;
+  animation-play-state: paused;
+}
+main > .section.motion-running::after { opacity: .9; animation-play-state: running; }
+@keyframes light-trail {
+  from { transform: translateX(-180px); }
+  to { transform: translateX(100vw); }
+}
+
+/* ---------- Scroll progress ---------- */
+.scroll-progress { height: 2px; background: linear-gradient(90deg, var(--brand-blue), var(--brand-teal)); box-shadow: 0 0 12px color-mix(in srgb, var(--brand-teal) 60%, transparent); }
+
+/* ---------- Buttons: a sheen crosses the primary action on hover ---------- */
+.btn-primary { position: relative; overflow: hidden; isolation: isolate; }
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .42) 50%, transparent 65%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.btn-primary:hover::after, .btn-primary:focus-visible::after { transform: translateX(120%); transition: transform .75s var(--e-expo); }
+
+/* ---------- Cards: a soft light follows the pointer ---------- */
+.lab-card { --spot-x: 50%; --spot-y: 0%; }
+.lab-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--spot-x) var(--spot-y), color-mix(in srgb, var(--lab-accent) 16%, transparent), transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-base) var(--e-std);
+}
+.lab-card:hover::before, .lab-card:focus-within::before { opacity: 1; }
+.lab-card > * { position: relative; z-index: 1; }
+
+/* ---------- Back to top ---------- */
+.back-to-top { transition: opacity .25s, transform .25s var(--e-quint), visibility .25s, box-shadow .25s var(--e-std); }
+.back-to-top:hover { box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand-teal) 22%, transparent); }
+.back-to-top svg { transition: transform var(--motion-base) var(--e-expo); }
+.back-to-top:hover svg { transform: translateY(-3px); }
+
+/* ---------- Hero: the copy recedes as the first section scrolls in ---------- */
+@supports (animation-timeline: scroll()) {
+  [data-motion="on"] .planet-hero-content {
+    animation: hero-recede linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 12vh 78vh;
+  }
+  [data-motion="on"] .planet-sky {
+    animation: hero-depth linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 100vh;
+  }
+}
+@keyframes hero-recede { to { opacity: .12; transform: translateY(-36px); } }
+@keyframes hero-depth { to { transform: scale(1.08); } }
+
+/* The side planets float only while the hero is on screen and motion is allowed
+   (they used to keep animating off screen and under reduced motion). */
+.planet-side img.is-shown { animation-play-state: paused; }
+.planet-hero.motion-running .planet-side img.is-shown { animation-play-state: running; }
+
+/* ---------- Footer links draw their underline ---------- */
+.footer-links a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--motion-base) var(--e-expo), color var(--motion-fast) var(--e-std), transform var(--motion-fast) var(--e-std); }
+.footer-links a:hover, .footer-links a:focus-visible { background-size: 100% 1px; }
+
+/* ---------- Motion off ---------- */
+[data-motion="off"] main > .section::after { display: none; }
+[data-motion="off"] .btn-primary::after { display: none; }
+[data-motion="off"] .faq-icon-box::before, [data-motion="off"] .faq-icon-box::after,
+[data-motion="off"] .faq-contact-link svg, [data-motion="off"] .back-to-top svg { transition: none; }
+[data-motion="off"] .faq-contact-link:hover svg, [data-motion="off"] .back-to-top:hover svg { transform: none; }
+
+@media (max-width: 760px) {
+  .faq-panel { padding-right: 18px; }
+  .faq-trigger { padding-inline: 14px; }
+  .faq-contact-link { min-height: 60px; }
+}

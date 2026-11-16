@@ -13,13 +13,7 @@ export function initLivingUniverse() {
 
   const unbindPreference = bindReducedMotionPreference(document.getElementById('reduce-motion-setting'));
 
-  document.querySelectorAll('.philosophy-geo').forEach((element, index) => {
-    element.innerHTML = index === 0 ? ORBIT_MOTIF : index === 1
-      ? `<svg class="orbit-motif" viewBox="0 0 360 260" fill="none" aria-hidden="true"><g class="ambient motif-orbit"><rect x="68" y="60" width="138" height="138" rx="36"/><circle cx="68" cy="130" r="5"/></g><g class="ambient motif-orbit reverse"><rect x="154" y="60" width="138" height="138" rx="36"/><circle cx="292" cy="130" r="5"/></g><path d="M168 130H192M180 118V142"/></svg>`
-      : `<svg class="orbit-motif" viewBox="0 0 360 260" fill="none" aria-hidden="true"><path d="M180 45L70 195H290Z"/><g class="ambient motif-orbit"><path d="M180 45L70 195H290Z" class="ambient network-flow"/></g><circle class="motif-center" cx="180" cy="45" r="24"/><circle class="motif-center" cx="70" cy="195" r="24"/><circle class="motif-center" cx="290" cy="195" r="24"/><path d="M180 45V145M70 195L180 145L290 195"/><circle cx="180" cy="145" r="7"/></svg>`;
-    element.dataset.principle = index;
-  });
-  for (const selector of ['.faq-layout > div:first-child', '.site-footer > .container']) {
+  for (const selector of ['.faq-intro', '.site-footer > .container']) {
     const parent = document.querySelector(selector);
     if (!parent) continue;
     const visual = document.createElement('div');
@@ -28,14 +22,6 @@ export function initLivingUniverse() {
     visual.innerHTML = ORBIT_MOTIF;
     parent.prepend(visual);
   }
-  document.querySelectorAll('.step-node').forEach((step, index) => {
-    const marker = document.createElement('div');
-    marker.className = 'journey-marker';
-    marker.setAttribute('aria-hidden', 'true');
-    marker.innerHTML = `<span class="ambient journey-orbit" style="--journey-delay:${-index*1.7}s"></span><span>${String(index+1).padStart(2,'0')}</span>`;
-    step.prepend(marker);
-  });
-
   const scopes = [...document.querySelectorAll('main > section, .site-footer')];
   const visibility = new Map(scopes.map(scope => [scope, false]));
   scopes.forEach(scope => scope.classList.add('motion-scope'));
@@ -52,11 +38,6 @@ export function initLivingUniverse() {
   document.addEventListener('visibilitychange', sync, { signal: events.signal });
   document.addEventListener('edulab:motion-change', sync, { signal: events.signal });
 
-  const activeObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => entry.target.classList.toggle('is-observed', entry.isIntersecting));
-  }, { rootMargin: '-25% 0px -25% 0px', threshold: .15 });
-  document.querySelectorAll('.philosophy-row, .step-node').forEach(element => activeObserver.observe(element));
-
   window.addEventListener('pointermove', event => {
     if (root.dataset.motion !== 'on' || event.pointerType !== 'mouse' || pointerFrame) return;
     pointerFrame = requestAnimationFrame(() => {
@@ -70,7 +51,6 @@ export function initLivingUniverse() {
     events.abort();
     unbindPreference();
     observer.disconnect();
-    activeObserver.disconnect();
     cancelAnimationFrame(pointerFrame);
     atmosphere.remove();
   };

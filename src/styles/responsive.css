@@ -65,47 +65,6 @@
         grid-column: span 1;
       }
 
-      .explorer-workspace {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .explorer-tab-list {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 8px;
-      }
-
-      .explorer-tab-item {
-        min-width: 220px;
-      }
-
-      .philosophy-row {
-        grid-template-columns: 90px 1fr;
-        gap: 16px;
-      }
-
-      .philosophy-text {
-        grid-column: 1 / -1;
-      }
-
-      .philosophy-geo {
-        display: none;
-      }
-
-      .steps-timeline {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .eco-branch-bar,
-      .eco-trunk-line {
-        display: none;
-      }
-
-      .eco-nodes-row {
-        margin-top: 24px;
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .faq-layout {
         grid-template-columns: 1fr;
       }
@@ -129,25 +88,9 @@
       .nexus-viewport.has-webgl .nexus-node[data-lab="mathlab"] { left: 70%; }
       .nexus-viewport.has-webgl .nexus-node[data-lab="biolab"] { left: 30%; }
 
-      .labs-bento-grid,
-      .steps-timeline,
-      .eco-nodes-row,
-      .preview-pillars,
-      .footer-grid {
+      .labs-bento-grid, .footer-grid {
         grid-template-columns: 1fr;
       }
-
-      .steps-timeline { padding-left: 18px; }
-      .steps-timeline::before {
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 2px;
-        height: 100%;
-        transform: scaleY(0);
-        transform-origin: top;
-      }
-      #cach-hoat-dong.is-visible .steps-timeline::before { transform: scaleY(1); }
 
       .header-inner {
         gap: 12px;
@@ -159,16 +102,6 @@
 
       .brand-sub {
         display: none;
-      }
-
-      .explorer-controls {
-        padding: 12px;
-      }
-
-      .search-field-wrap {
-        width: 100%;
-        min-width: 0;
-        max-width: none;
       }
 
       .lab-card-footer {

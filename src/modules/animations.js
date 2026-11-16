@@ -1,5 +1,3 @@
-import { getMotionState } from './motion-controller.js';
-
 export function initEntranceAnimation() {
   const root = document.documentElement;
   document.body.classList.add('js-ready');
@@ -36,12 +34,8 @@ export function initScrollReveals() {
   const motionGroups = {
     'kham-pha-lab': '.section-header-row, .lab-card',
     nexus: '.nexus-section-copy > *, .nexus-stage',
-    'bo-kham-pha': '.section-header-row, .explorer-controls, .explorer-workspace',
-    've-edulab': '.eyebrow, .section-title, .section-desc, .philosophy-row',
-    'cach-hoat-dong': '.section-header-row, .step-node',
-    'he-sinh-thai': '.section-header-row, .eco-detail-bar',
     exa: '.exa-copy > *, .exa-stage, .exa-capabilities li, .exa-ecosystem',
-    faq: '.faq-layout > *, .faq-item',
+    faq: '.faq-intro > *, .faq-item',
   };
   revealEls.forEach(function(section) {
     const selector = motionGroups[section.id];
@@ -64,25 +58,6 @@ export function initScrollReveals() {
   } else {
     revealEls.forEach(function(el) { el.classList.add('is-visible'); });
   }
-
-  const timeline = document.querySelector('.steps-timeline');
-  if (!timeline) return;
-  let ticking = false;
-  function updateTimeline() {
-    ticking = false;
-    const rect = timeline.getBoundingClientRect();
-    const progress = getMotionState().canAnimate ? Math.max(0, Math.min(1, (window.innerHeight * 0.82 - rect.top) / (rect.height + window.innerHeight * 0.35))) : 1;
-    timeline.style.setProperty('--timeline-progress', progress.toFixed(3));
-  }
-  function queueTimelineUpdate() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(updateTimeline);
-  }
-  window.addEventListener('scroll', queueTimelineUpdate, { passive: true });
-  window.addEventListener('resize', queueTimelineUpdate);
-  document.addEventListener('edulab:motion-change', queueTimelineUpdate);
-  updateTimeline();
 }
 
 export function initFooterYear() {

@@ -7,10 +7,6 @@ const samples = [
   ['math', '.lab-card[data-lab="mathlab"] .geometry-turn'],
   ['biology', '.lab-card[data-lab="biolab"] .dna-rung'],
   ['it', '.lab-card[data-lab="itlab"] .data-travel'],
-  ['explorer', '.preview-visual-stage .orbit-electron'],
-  ['about', '.philosophy-geo .motif-orbit'],
-  ['timeline', '.journey-orbit'],
-  ['ecosystem', '.network-flow'],
   ['faq', '#faq .motif-orbit'],
   ['exa card', '.exa-card'],
   ['exa orbit', '.exa-orbit'],
@@ -149,7 +145,7 @@ test('legacy running remains an explicit opt-in when the visible control is remo
   const video=page.locator('video[data-planet="earth"]');
   await expect(video).toHaveClass(/is-playing/);
   await expect(video).toHaveJSProperty('paused',false);
-  for (const selector of ['.molecule-drift','.preview-visual-stage .orbit-electron','.philosophy-geo .motif-orbit','.journey-orbit','.eco-hub-wrap .network-flow','.exa-card','.exa-scene']) {
+  for (const selector of ['.molecule-drift','#faq .motif-orbit','.exa-card','.exa-scene']) {
     const artwork=page.locator(selector).first();
     await artwork.evaluate(element => element.scrollIntoView({block:'center',behavior:'instant'}));
     await expect(artwork).toHaveCSS('animation-play-state','running');
@@ -226,19 +222,3 @@ test('Nexus renders distinct frames and maintains one canvas through pause and s
   await expect(page.locator('.nexus-node[data-lab="itlab"]')).not.toHaveAttribute('data-canvas-point',point);
 });
 
-test('Explorer retains the selected DOM control and focus; ecosystem reset works', async ({ page }) => {
-  await page.goto('/');
-  const button=page.locator('.explorer-tab-item[data-lab="physicslab"]');
-  const handle=await button.elementHandle();
-  await button.click();
-  expect(await handle.evaluate(element=>element.isConnected&&element===document.activeElement)).toBe(true);
-  await expect(page.locator('#preview-title')).toHaveText('PhysicsLab');
-  await page.locator('#lab-search-input').fill('tin hoc');
-  await page.locator('#search-clear-btn').click();
-  expect(await page.locator('.explorer-tab-item').evaluateAll(buttons => buttons.map(button => button.dataset.lab))).toEqual(['chemlab','physicslab','mathlab','biolab','itlab']);
-  await page.locator('.eco-node-btn[data-eco-lab="biolab"]').click();
-  await expect(page.locator('[data-connection="biolab"]')).toHaveClass(/is-active/);
-  await page.locator('#eco-reset-btn').click();
-  await expect(page.locator('.eco-node-btn[aria-pressed="true"]')).toHaveCount(0);
-  await expect(page.locator('#eco-detail-title')).toHaveText('Năm lĩnh vực. Một điểm khởi đầu.');
-});

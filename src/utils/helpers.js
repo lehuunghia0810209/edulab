@@ -1,15 +1,5 @@
 let toastTimer = null;
 
-export function normalizeVN(str) {
-  return String(str || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
-    .toLowerCase()
-    .trim();
-}
-
 export function showStatusToast(message) {
   const toast = document.getElementById('status-toast');
   if (!toast) return;

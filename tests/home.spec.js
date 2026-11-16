@@ -46,11 +46,11 @@ test('desktop navigation and core controls', async ({ page }) => {
   await expect(nav).toBeVisible();
   await expect(nav).not.toHaveAttribute('inert');
   await expect(nav).toHaveAttribute('aria-hidden', 'false');
-  await page.getByRole('link', { name: 'Về EduLab', exact: true }).first().click();
-  await expect(page).toHaveURL(/#ve-edulab$/);
-  await expect(page.locator('.nav-link[href="#ve-edulab"]')).toHaveClass(/is-active/);
-  await page.getByRole('link', { name: 'Hệ sinh thái', exact: true }).first().focus();
-  await expect(page.getByRole('link', { name: 'Hệ sinh thái', exact: true }).first()).toBeFocused();
+  await page.getByRole('link', { name: 'Knowledge Galaxy', exact: true }).first().click();
+  await expect(page).toHaveURL(/#nexus$/);
+  await expect(page.locator('.nav-link[href="#nexus"]')).toHaveClass(/is-active/);
+  await page.getByRole('link', { name: 'Thông tin', exact: true }).first().focus();
+  await expect(page.getByRole('link', { name: 'Thông tin', exact: true }).first()).toBeFocused();
   expect(errors).toEqual([]);
 });
 
@@ -118,29 +118,6 @@ test('Nexus selection, reset, raycast and fallback controls', async ({ page }) =
   await fallback.close();
 });
 
-test('Explorer search, categories, empty state and recovery', async ({ page }) => {
-  await page.goto('/');
-  const search = page.locator('#lab-search-input');
-  await search.fill('tin hoc');
-  await expect(page.locator('.explorer-tab-item')).toHaveCount(1);
-  await expect(page.locator('#preview-title')).toHaveText('ITLab');
-  await page.locator('#search-clear-btn').click();
-  await expect(search).toBeFocused();
-  await expect(page.locator('.explorer-tab-item')).toHaveCount(5);
-  await search.fill('hoa hoc');
-  await expect(page.locator('#preview-title')).toHaveText('ChemLab');
-  await search.fill('');
-  await page.locator('.filter-btn[data-filter="logic"]').click();
-  await expect(page.locator('.filter-btn[data-filter="logic"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.explorer-tab-item')).toHaveCount(2);
-  await search.fill('khong co lab nay');
-  await expect(page.locator('#explorer-empty')).toBeVisible();
-  await expect(page.locator('#explorer-preview-panel')).toBeHidden();
-  await page.locator('#reset-search-btn').click();
-  await expect(page.locator('.explorer-tab-item')).toHaveCount(5);
-  await expect(search).toBeFocused();
-});
-
 test('theme, FAQ, Lab URL states and toast', async ({ page }) => {
   await page.goto('/');
   await page.locator('#theme-toggle').click();
@@ -178,19 +155,12 @@ test('Lab actions stay consistent across sections', async ({ page }) => {
   await expect(page.locator('#nexus-hud-cta-slot a')).toHaveAttribute('href', 'https://example.org/chem');
   await page.locator('.nexus-node[data-lab="physicslab"]').click();
   await expect(page.locator('#nexus-hud-cta-slot button')).toContainText('Chưa cập nhật liên kết');
-  await page.locator('#lab-search-input').fill('physicslab');
-  await expect(page.locator('#preview-action-slot button')).toContainText('Chưa cập nhật liên kết');
-  await page.locator('.eco-node-btn[data-eco-lab="physicslab"]').click();
-  await expect(page.locator('#eco-detail-action button')).toContainText('Chưa cập nhật liên kết');
   await expect(page.locator('#footer-lab-links a').first()).toHaveAttribute('href', 'https://example.org/chem');
   await expect(page.locator('#footer-lab-links button').first()).toContainText('PhysicsLab');
 });
 
-test('ecosystem, footer navigation and back to top', async ({ page }) => {
+test('footer navigation and back to top', async ({ page }) => {
   await page.goto('/');
-  await page.locator('.eco-node-btn[data-eco-lab="physicslab"]').click();
-  await expect(page.locator('#eco-detail-title')).toContainText('PhysicsLab');
-  await expect(page.locator('.eco-node-btn[aria-pressed="true"]')).toHaveCount(1);
   await page.locator('.site-footer a[href="#faq"]').click();
   await expect(page).toHaveURL(/#faq$/);
   await page.locator('#back-to-top').click();
@@ -377,36 +347,19 @@ test('core Lab content and configured links work without JavaScript', async ({ b
   await expect(page.locator('.lab-card')).toHaveCount(5);
   await expect(page.locator('.lab-card').first().getByRole('link')).toHaveAttribute('href', 'https://example.org/chem');
   await expect(page.locator('#footer-lab-links a[href="https://example.org/chem"]')).toHaveCount(1);
-  await expect(page.locator('.no-js-note')).toBeVisible();
+  // No script means no accordion: every answer and the contact links are readable.
+  for (const panel of await page.locator('.faq-panel').all()) await expect(panel).toBeVisible();
+  await expect(page.locator('.faq-contact a[href="mailto:huwnghiax0810@gmail.com"]')).toBeVisible();
+  await expect(page.locator('a[href="#bo-kham-pha"], a[href="#he-sinh-thai"]')).toHaveCount(0);
   await context.close();
 });
 
-test('Explorer selection produces observable motion feedback', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/');
-  await page.locator('#bo-kham-pha').scrollIntoViewIfNeeded();
-  await page.locator('.explorer-tab-item[data-lab="itlab"]').click();
-  await expect(page.locator('#preview-title')).toHaveText('ITLab');
-  expect(await page.locator('#explorer-preview-panel').evaluate(panel => panel.getAnimations().length)).toBeGreaterThan(0);
-});
-
-test('timeline exposes scroll-linked progress', async ({ page }) => {
-  await page.goto('/');
-  const timeline = page.locator('.steps-timeline');
-  await timeline.scrollIntoViewIfNeeded();
-  await expect.poll(() => timeline.evaluate(element => Number.parseFloat(getComputedStyle(element).getPropertyValue('--timeline-progress')))).toBeGreaterThan(0.2);
-});
-
-test('planet and ecosystem controls support keyboard activation', async ({ page }) => {
+test('planet controls support keyboard activation', async ({ page }) => {
   await page.goto('/');
   const planet = page.getByRole('button', { name: 'Khám phá Sao Hỏa' });
   await planet.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('.planet-title')).toHaveText('MARS');
-  const eco = page.locator('.eco-node-btn[data-eco-lab="biolab"]');
-  await eco.focus();
-  await page.keyboard.press('Space');
-  await expect(page.locator('#eco-detail-title')).toContainText('BioLab');
 });
 
 test('page supports 200 percent pinch zoom and equivalent layout reflow', async ({ page }) => {
@@ -422,8 +375,6 @@ test('page supports 200 percent pinch zoom and equivalent layout reflow', async 
   await page.setViewportSize({ width: 720, height: 450 });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
   await expect(page.locator('#burger-btn')).toBeVisible();
-  await page.locator('#lab-search-input').fill('tin hoc');
-  await expect(page.locator('#preview-title')).toHaveText('ITLab');
 });
 
 test('every Lab keeps artwork, status and one safe action', async ({ page }) => {
@@ -437,7 +388,7 @@ test('every Lab keeps artwork, status and one safe action', async ({ page }) => 
 
 test('major sections resolve their individual reveal states', async ({ page }) => {
   await page.goto('/');
-  for (const id of ['kham-pha-lab', 'nexus', 'bo-kham-pha', 'exa', 've-edulab', 'cach-hoat-dong', 'he-sinh-thai', 'faq']) {
+  for (const id of ['kham-pha-lab', 'nexus', 'exa', 'faq']) {
     const section = page.locator('#' + id);
     await section.scrollIntoViewIfNeeded();
     await expect(section).toHaveClass(/is-visible/);
@@ -461,19 +412,17 @@ test('Exa remains a separate assessment platform with its existing link', async 
   await page.goto('/');
   await expect(page.locator('.lab-card')).toHaveCount(5);
   await expect(page.locator('.nexus-node')).toHaveCount(5);
-  await expect(page.locator('.eco-node-btn')).toHaveCount(5);
   await expect(page.locator('.exa-capabilities li')).toHaveCount(4);
   await expect(page.locator('.exa-eco-chips span')).toHaveCount(5);
   await page.locator('.nav-link[href="#exa"]').click();
   await expect(page).toHaveURL(/#exa$/);
   await expect(page.locator('.nav-link[href="#exa"]')).toHaveClass(/is-active/);
   const order = await page.locator('main > section').evaluateAll(sections => sections.map(section => section.id));
-  expect(order.indexOf('exa')).toBe(order.indexOf('bo-kham-pha') + 1);
+  expect(order).toEqual(['top', 'kham-pha-lab', 'nexus', 'exa', 'faq']);
   const action = page.locator('#exa-action-slot a');
   await expect(action).toHaveAttribute('href', 'https://exa-edulab.pages.dev/');
   await expect(page.locator('#exa-action-slot button')).toHaveCount(0);
   await expect(page.locator('#footer-exa-links a')).toHaveAttribute('href', 'https://exa-edulab.pages.dev/');
-  await expect(page.locator('#footer-contact')).toBeHidden();
 });
 
 test('footer links resolve and the redundant final CTA is gone', async ({ page }) => {
@@ -483,7 +432,7 @@ test('footer links resolve and the redundant final CTA is gone', async ({ page }
   await expect(page.locator('.final-cta-box')).toHaveCount(0);
   const targets = await page.locator('a[href^="#"]').evaluateAll(links => links.map(link => link.getAttribute('href')));
   for (const hash of new Set(targets)) await expect(page.locator(hash), hash).toHaveCount(1);
-  for (const title of ['Khám phá', 'Sản phẩm', 'Tìm hiểu']) await expect(page.locator('.footer-col-title', { hasText: title })).toHaveCount(1);
+  for (const title of ['Khám phá', 'Sản phẩm', 'Thông tin']) await expect(page.locator('.footer-col-title', { hasText: title })).toHaveCount(1);
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBe(0);
@@ -591,5 +540,75 @@ test('Knowledge Galaxy core, badge and orbits share one rendered centre', async 
       expect(Math.hypot(centre[0] - badge[0], centre[1] - badge[1]), `${name} vs badge at DPR ${deviceScaleFactor}`).toBeLessThanOrEqual(3);
     }
     await context.close();
+  }
+});
+
+test('the four retired sections are gone, with nothing left pointing at them', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  for (const id of ['bo-kham-pha', 've-edulab', 'cach-hoat-dong', 'he-sinh-thai']) {
+    await expect(page.locator('#' + id)).toHaveCount(0);
+    await expect(page.locator('a[href="#' + id + '"]')).toHaveCount(0);
+  }
+  await expect(page.locator('.explorer-workspace, .philosophy-list, .steps-timeline, .eco-architecture, #lab-search-input')).toHaveCount(0);
+  for (const heading of ['Một cánh cửa. Nhiều hành trình học tập.', 'Học không chỉ là ghi nhớ.', 'Tra cứu & Xem trước không gian Lab.', 'Độc lập trong trải nghiệm. Kết nối trong tầm nhìn.']) {
+    await expect(page.getByText(heading)).toHaveCount(0);
+  }
+  // Every in-page anchor and every aria reference still resolves.
+  const dangling = await page.evaluate(() => {
+    const anchors = [...document.querySelectorAll('a[href^="#"]')].map(a => a.getAttribute('href')).filter(href => href.length > 1 && !document.querySelector(href));
+    const aria = [...document.querySelectorAll('[aria-labelledby], [aria-controls]')].flatMap(el => [el.getAttribute('aria-labelledby'), el.getAttribute('aria-controls')]).filter(Boolean).flatMap(value => value.split(' ')).filter(id => !document.getElementById(id));
+    return [...anchors, ...aria];
+  });
+  expect(dangling).toEqual([]);
+  // The five Labs are still one click away, in the cards and in the footer.
+  await expect(page.locator('.lab-card .lab-card-footer').locator('a, button')).toHaveCount(5);
+  await expect(page.locator('#footer-lab-links li')).toHaveCount(5);
+  expect(errors).toEqual([]);
+});
+
+test('information and policies state the confirmed facts and official contacts', async ({ page }) => {
+  await page.goto('/');
+  const section = page.locator('#faq');
+  await expect(section.locator('#faq-heading')).toHaveText('Thông tin & Chính sách EduLab.');
+  await expect(section.locator('.faq-item')).toHaveCount(6);
+  const text = await section.evaluate(element => element.textContent.replace(/\s+/g, ' '));
+  expect(text).toContain('REVENGER STUDIO (của Huu Nghia)');
+  expect(text).toContain('Bạn cần được cho phép trước khi sao chép, tái sử dụng, phân phối hoặc chỉnh sửa');
+  expect(text).toContain('tuân theo giấy phép riêng của họ');
+  expect(text).toContain('EduLab được cập nhật khi có tính năng mới, nội dung học tập bổ sung hoặc bản sửa lỗi.');
+  expect(text).not.toMatch(/không thu thập bất kỳ dữ liệu|mã hóa tuyệt đối|trong vòng \d+ (giờ|ngày)/i);
+  for (const scope of ['.faq-contact', '#faq-ans-5', '.site-footer']) {
+    await expect(page.locator(scope + ' a[href="mailto:huwnghiax0810@gmail.com"]')).toHaveCount(1);
+    const facebook = page.locator(scope + ' a[href="https://www.facebook.com/huwnghiax/"]');
+    await expect(facebook).toHaveCount(1);
+    await expect(facebook).toHaveAttribute('rel', 'noopener noreferrer');
+  }
+  await expect(page.locator('.site-footer .footer-bottom')).toContainText('REVENGER STUDIO');
+  // What the answer about stored data claims is what the page really stores.
+  await page.locator('#theme-toggle').click();
+  await page.locator('#reduce-motion-setting').check();
+  expect(await page.evaluate(() => ({ keys: Object.keys(localStorage).sort(), session: sessionStorage.length, cookie: document.cookie }))).toEqual({ keys: ['edulab-reduce-motion', 'edulab-theme'], session: 0, cookie: '' });
+});
+
+test('the accordion works from the keyboard and keeps one name per panel', async ({ page }) => {
+  await page.goto('/');
+  const triggers = page.locator('.faq-trigger');
+  await triggers.nth(2).focus();
+  await page.keyboard.press('Space');
+  await expect(triggers.nth(2)).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#faq-ans-3')).toBeVisible();
+  await expect(page.locator('#faq-ans-3')).toContainText('giao diện sáng/tối');
+  await page.keyboard.press('Tab');
+  await expect(triggers.nth(3)).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Enter');
+  await expect(triggers.nth(2)).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('#faq-ans-3')).toBeHidden();
+  for (const trigger of await triggers.all()) {
+    const panel = page.locator('#' + await trigger.getAttribute('aria-controls'));
+    await expect(panel).toHaveAttribute('role', 'region');
+    await expect(panel).toHaveAttribute('aria-labelledby', await trigger.getAttribute('id'));
   }
 });

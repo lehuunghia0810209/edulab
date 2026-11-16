@@ -5,6 +5,8 @@ export function initFAQ() {
     const trigger = item.querySelector('.faq-trigger');
     const panel = item.querySelector('.faq-panel');
     if (!trigger || !panel) return;
+    // Collapsed here, not in the HTML: without JavaScript every answer stays readable.
+    panel.hidden = trigger.getAttribute('aria-expanded') !== 'true';
     trigger.addEventListener('click', function() {
       const isOpen = trigger.getAttribute('aria-expanded') === 'true';
       trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
