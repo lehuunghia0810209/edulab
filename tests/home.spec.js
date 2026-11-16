@@ -574,7 +574,8 @@ test('information and policies state the confirmed facts and official contacts',
   await expect(section.locator('#faq-heading')).toHaveText('Thông tin & Chính sách EduLab.');
   await expect(section.locator('.faq-item')).toHaveCount(6);
   const text = await section.evaluate(element => element.textContent.replace(/\s+/g, ' '));
-  expect(text).toContain('REVENGER STUDIO (của Huu Nghia)');
+  expect(text).toContain('EduLab thuộc sở hữu của REVENGER STUDIO.');
+  expect(text).not.toContain('của Huu Nghia');
   expect(text).toContain('Bạn cần được cho phép trước khi sao chép, tái sử dụng, phân phối hoặc chỉnh sửa');
   expect(text).toContain('tuân theo giấy phép riêng của họ');
   expect(text).toContain('EduLab được cập nhật khi có tính năng mới, nội dung học tập bổ sung hoặc bản sửa lỗi.');
