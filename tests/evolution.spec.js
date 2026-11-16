@@ -126,6 +126,9 @@ test('fast scrolling never leaves headings or answers hidden', async ({ page }) 
 });
 
 test('phones and touch screens keep the plain hero without the particle canvas', async ({ browser }) => {
+  // Two full page loads, each waiting for `load` (the field would only appear after it),
+  // and `load` includes the large CDN planet images.
+  test.setTimeout(90000);
   for (const options of [{ viewport: { width: 390, height: 844 } }, { viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true }]) {
     const context = await browser.newContext({ ...options, reducedMotion: 'no-preference' });
     const page = await context.newPage();
