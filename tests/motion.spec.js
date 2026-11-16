@@ -41,13 +41,18 @@ for (const width of [1440, 390]) {
         const matrix = new DOMMatrix(style.transform);
         return [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f, Number.parseFloat(style.strokeDashoffset) || 0];
       }));
-      const initial=await readArtwork();
-      await page.waitForTimeout(2000);
-      const after2=await readArtwork();
-      await page.waitForTimeout(3000);
-      const after5=await readArtwork();
-      expect(difference(initial,after2), `${name}: 2s`).toBeGreaterThan(.04);
-      expect(difference(initial,after5), `${name}: 5s`).toBeGreaterThan(.04);
+      // Sample every 250ms instead of only at 2s and 5s: a periodic motion such as the
+      // pendulum legitimately passes the same angle again, and two single samples that sit
+      // symmetrically around a turning point read as "frozen" although it is moving.
+      const samples=[await readArtwork()];
+      for (let i=1;i<=20;i+=1) {
+        await page.waitForTimeout(250);
+        samples.push(await readArtwork());
+      }
+      const [initial,after2,after5]=[samples[0],samples[8],samples[20]];
+      const moved=(from,window)=>Math.max(...window.map(sample=>difference(from,sample)));
+      expect(moved(initial,samples.slice(1,9)), `${name}: 0–2s`).toBeGreaterThan(.04);
+      expect(moved(after2,samples.slice(9)), `${name}: 2–5s`).toBeGreaterThan(.04);
       results.push({name,initial,after2,after5});
     }
     await mkdir(motionEvidenceDir,{recursive:true});
