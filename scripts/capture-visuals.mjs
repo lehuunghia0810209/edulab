@@ -3,7 +3,7 @@ import { mkdir } from 'node:fs/promises';
 
 const destination = process.argv[2] || 'artifacts/after-5';
 const baseURL = process.env.QA_URL || 'http://127.0.0.1:5187';
-const sections = { hero: '#top', discovery: '#kham-pha-lab', nexus: '#nexus', explorer: '#bo-kham-pha', about: '#ve-edulab', timeline: '#cach-hoat-dong', ecosystem: '#he-sinh-thai', faq: '#faq', cta: '.final-cta-box', footer: '.site-footer' };
+const sections = { hero: '#top', discovery: '#kham-pha-lab', nexus: '#nexus', exa: '#exa', faq: '#faq', footer: '.site-footer' };
 await mkdir(destination, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome' });
 try {

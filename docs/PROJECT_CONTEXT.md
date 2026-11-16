@@ -4,24 +4,24 @@
 
 EduLab Home V5 Refined là portal tĩnh cho năm phòng Lab môn học — ChemLab, PhysicsLab, MathLab, BioLab, ITLab — và nền tảng kiểm tra trực tuyến **Exa**. Mỗi sản phẩm là một deployment độc lập; Home chỉ hiển thị metadata và liên kết đã cấu hình, không chứa source của chúng.
 
-Exa **không phải Lab thứ sáu**: không nằm trong `LABS`, Knowledge Galaxy hay sơ đồ Hệ sinh thái; số phòng Lab luôn là năm.
+Exa **không phải Lab thứ sáu**: không nằm trong `LABS`, hay Knowledge Galaxy; số phòng Lab luôn là năm.
 
 ## Architecture
 
 - Entry point: `src/main.js`; đây là nơi khởi tạo CSS và từng module theo thứ tự.
 - Runtime: HTML, CSS, ES modules, Vite và Three.js cho Knowledge Nexus.
 - Data: `src/data/labs.js` là nguồn duy nhất cho metadata/Lab URL; `src/data/artwork.js` chứa SVG dùng lại.
-- UI modules: Discovery, Explorer, Ecosystem, FAQ, Navigation, Theme, Planet Hero, Living Universe và Nexus.
+- UI modules: Discovery, FAQ, Interactions (ánh sáng theo con trỏ trên thẻ Lab), Navigation, Theme, Planet Hero, Living Universe và Nexus.
 - `src/three/nexus-scene.js` sở hữu WebGL scene, render loop và disposal. `src/modules/nexus.js` chỉ tải scene khi gần viewport và giữ fallback HTML hoạt động.
 - Runtime assets: logo và poster Earth/Venus/Mars nằm trong `public/assets/` và được tham chiếu bằng `/assets/...`. Poster là fallback khi video/CDN không sẵn sàng.
 - Exa là một panel riêng: phần copy, visual 2.5D, bốn năng lực (luyện tập, làm bài kiểm tra, đánh giá năng lực, theo dõi tiến trình) và dải “5 phòng Lab → Exa”. Không thêm tính năng nào chưa được xác nhận.
-- Thứ tự section: Hero `#top` → `#kham-pha-lab` → `#nexus` → `#bo-kham-pha` → `#exa` → `#ve-edulab` → `#cach-hoat-dong` → `#he-sinh-thai` → `#faq` → footer. CTA cuối “Hành trình khám phá bắt đầu từ đây” đã bị bỏ có chủ đích; không thêm lại.
-- `discovery.js` render thẻ Lab, danh sách sản phẩm ở footer (5 Lab + Exa), nút “Vào Exa” và mục Liên hệ tùy chọn. `index.html` chứa sẵn `<span data-lab-url="VITE_*_URL">`; plugin `staticLabLinks` trong `vite.config.js` biến năm Lab thành link tĩnh khi build, dùng URL cấu hình hợp lệ hoặc cùng fallback đã có trong `labs.js`, để điều hướng Lab vẫn hoạt động khi tắt JavaScript. Cơ chế URL Exa không đổi.
+- Thứ tự section: Hero `#top` → `#kham-pha-lab` → `#nexus` → `#exa` → `#faq` → footer. Bốn section `#bo-kham-pha` (Lab Explorer), `#ve-edulab` (Philosophy), `#cach-hoat-dong` (Timeline) và `#he-sinh-thai` (sơ đồ Hệ sinh thái) đã bị chủ dự án xóa hẳn vào 2026-11; không thêm lại, kể cả dưới dạng thu nhỏ hay animation. CTA cuối “Hành trình khám phá bắt đầu từ đây” đã bị bỏ có chủ đích; không thêm lại.
+- `discovery.js` render thẻ Lab, danh sách sản phẩm ở footer (5 Lab + Exa) và nút “Vào Exa”. `index.html` chứa sẵn `<span data-lab-url="VITE_*_URL">`; plugin `staticLabLinks` trong `vite.config.js` biến năm Lab thành link tĩnh khi build, dùng URL cấu hình hợp lệ hoặc cùng fallback đã có trong `labs.js`, để điều hướng Lab vẫn hoạt động khi tắt JavaScript. Cơ chế URL Exa không đổi.
 - Script inline trong `<head>` đặt `data-theme`, `data-motion` và class `anim` trước lần paint đầu tiên (tránh nháy giao diện). Logic preference của nó phải luôn khớp với `readPreference()` trong `motion-controller.js`.
 
 ## Typography
 
-- Hero (EARTH/VENUS/MARS), số thứ tự About/Timeline và wordmark “Exa” dùng Prata — điểm nhấn display.
+- Hero (EARTH/VENUS/MARS), và wordmark “Exa” dùng Prata — điểm nhấn display.
 - `.section-title` dùng Be Vietnam Pro 600 (font thiết kế cho dấu tiếng Việt) với line-height 1.14 để dấu chồng như “ể”, “ộ” không bị cắt.
 - Nhãn kỹ thuật/eyebrow dùng Space Grotesk; nội dung dùng Be Vietnam Pro. Không tải thêm font ngoài bốn họ trong `index.html`.
 
@@ -58,6 +58,19 @@ Một Windows có thể trả `prefers-reduced-motion: reduce`. V5 cũ có thể
 
 Khi sửa motion, chạy `npm run test:e2e` và kiểm tra: system reduce, legacy running/paused, explicit allow/reduce, reload, Hero switching, section visibility và Nexus lifecycle.
 
+## Data (kiểm toán 2026-11-16)
+
+Cơ sở cho câu trả lời về dữ liệu trong mục Thông tin. Kiểm tra trên source và trên HTML production:
+
+- `localStorage`: `edulab-theme` (sáng/tối) và `edulab-reduce-motion` (giảm chuyển động); `edulab-motion` là khóa cũ chỉ được đọc để migrate. Không dùng `sessionStorage`, cookie hay IndexedDB.
+- Không có biểu mẫu, tài khoản, `fetch`/XHR/beacon, analytics hay script bên thứ ba trong source; HTML production không có beacon được chèn thêm.
+- Yêu cầu tới bên thứ ba khi tải trang: Cloudflare Pages (hosting), Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`), CloudFront (`d8j0ntlcm91z4.cloudfront.net`, ảnh và video hành tinh). Liên kết ra ngoài: năm Lab, Exa, `mailto:` và Facebook.
+- Test `information and policies state the confirmed facts…` khóa đúng hai khóa `localStorage` này và việc không có cookie.
+
+## Motion bổ sung (premium.css)
+
+Tất cả chỉ dùng transform/opacity và tắt dưới `[data-motion="off"]`: vệt sáng chạy dọc mép trên mỗi section (chỉ chạy khi section có `.motion-running`), ánh sáng theo con trỏ trên thẻ Lab (`interactions.js`, một listener ủy quyền), sheen trên nút chính, dấu cộng gập thành dấu trừ ở accordion, và Hero lùi dần khi cuộn bằng `animation-timeline: scroll()` (chỉ ở trình duyệt hỗ trợ; nơi khác Hero đứng yên như cũ). Không thêm thư viện animation.
+
 ## Planet media
 
 `planet-hero.js` chỉ nạp video hành tinh đang được chọn. Video muted, loop và playsinline; `syncVideo()` dừng media khi Hero/tab không visible hoặc motion không được phép. Poster cục bộ vẫn phải tồn tại. Không thay playback rate, opacity hoặc nguồn CDN nếu task không yêu cầu.
@@ -65,7 +78,7 @@ Khi sửa motion, chạy `npm run test:e2e` và kiểm tra: system reduce, legac
 ## Configuration and deployment
 
 - Copy `.env.example` to `.env.local` để đặt `VITE_*_URL` cho các Lab và `VITE_EXA_URL` cho Exa. Không tự đặt domain cho Exa; khi trống, giao diện hiển thị “Chưa cập nhật liên kết”.
-- `VITE_CONTACT_EMAIL` (tùy chọn) bật mục “Liên hệ” trong footer. Footer không có trang chính sách, số điện thoại hay mạng xã hội cho tới khi có dữ liệu thật.
+- Liên hệ chính thức (email và Facebook của chủ dự án) nằm tĩnh trong `index.html`, ở mục Thông tin và footer. Không thêm số điện thoại, trang chính sách hay kênh khác khi chưa có dữ liệu thật.
 - Chỉ HTTP/HTTPS là URL hợp lệ. Các biến `VITE_*` là public khi build.
 - Cloudflare Pages build từ source với `npm run build` và publish `dist`.
 - `VITE_BASE_PATH` chỉ dùng khi deploy dưới subpath.

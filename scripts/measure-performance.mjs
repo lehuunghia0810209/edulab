@@ -41,8 +41,6 @@ try {
     }));
     assert.equal(frames.length, 300);
     await page.locator('.nexus-node[data-lab="physicslab"]').click();
-    await page.locator('#lab-search-input').fill('tin hoc');
-    await page.locator('#search-clear-btn').click();
     await page.locator('#faq-btn-2').click();
     await page.waitForTimeout(500);
     const metrics = await page.evaluate(() => window.qaPerformance);

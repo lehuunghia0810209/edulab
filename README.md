@@ -44,16 +44,17 @@ EduLabHome/
 ├── index.html
 ├── public/
 │   └── assets/
-│       ├── edulab-logo.png
+│       ├── edulab-logo.png        (bản gốc chính thức)
+│       ├── edulab-logo-256.webp   (bản 256 px trang đang dùng)
 │       ├── planet-earth.webp
 │       ├── planet-mars.webp
 │       └── planet-venus.webp
 ├── docs/
+│   ├── CLEANUP_MANIFEST.md
 │   └── PROJECT_CONTEXT.md
 ├── scripts/
 │   ├── capture-visuals.mjs
-│   ├── measure-performance.mjs
-│   └── record-motion.mjs
+│   └── measure-performance.mjs
 ├── src/
 │   ├── main.js
 │   ├── data/
@@ -62,8 +63,7 @@ EduLabHome/
 │   ├── modules/
 │   │   ├── animations.js
 │   │   ├── discovery.js
-│   │   ├── ecosystem.js
-│   │   ├── explorer.js
+│   │   ├── interactions.js
 │   │   ├── living-universe.js
 │   │   ├── motion-controller.js
 │   │   ├── faq.js
@@ -79,6 +79,7 @@ EduLabHome/
 │   │   ├── responsive.css
 │   │   ├── living-universe.css
 │   │   ├── exa.css
+│   │   ├── premium.css
 │   │   └── tokens.css
 │   └── utils/
 │       └── helpers.js
@@ -91,7 +92,7 @@ EduLabHome/
 └── vite.config.js
 ```
 
-Logo chính thức duy nhất nằm trong `public/assets/edulab-logo.png` và được tham chiếu bằng đường dẫn tuyệt đối `/assets/edulab-logo.png` (Vite tự thêm `VITE_BASE_PATH`). Bản sao trùng từng byte ở `assets/` gốc đã được bỏ để `dist/` không chứa hai bản logo. Không dùng gradient trong CSS/SVG.
+Logo chính thức duy nhất nằm trong `public/assets/edulab-logo.png`. Trang tải bản thu nhỏ 256 px tạo từ chính file đó, `/assets/edulab-logo-256.webp` (9,8 kB thay vì 1,19 MB), bằng đường dẫn tuyệt đối (Vite tự thêm `VITE_BASE_PATH`). Bản sao trùng từng byte ở `assets/` gốc đã được bỏ để `dist/` không chứa hai bản logo. Không dùng gradient trong CSS/SVG.
 
 ## Cấu hình liên kết Lab
 
@@ -106,24 +107,23 @@ VITE_MATHLAB_URL=https://...
 VITE_BIOLAB_URL=
 VITE_ITLAB_URL=
 VITE_EXA_URL=
-VITE_CONTACT_EMAIL=
 ```
 
-`VITE_EXA_URL` là địa chỉ nền tảng Exa, dùng chung validator HTTP/HTTPS với các Lab (`EXA` trong `src/data/labs.js`). Khi trống, link “Exa” trên header vẫn cuộn tới section `#exa`, còn nút “Vào Exa” hiển thị trạng thái “Chưa cập nhật liên kết”. `VITE_CONTACT_EMAIL` là tùy chọn: chỉ khi có email hợp lệ, footer mới hiện mục “Liên hệ” (`mailto:`); không có giá trị mặc định.
+`VITE_EXA_URL` là địa chỉ nền tảng Exa, dùng chung validator HTTP/HTTPS với các Lab (`EXA` trong `src/data/labs.js`). Khi trống, link “Exa” trên header vẫn cuộn tới section `#exa`, còn nút “Vào Exa” hiển thị trạng thái “Chưa cập nhật liên kết”.
 
-Không đưa thông tin bí mật vào biến `VITE_*`: các giá trị này được nhúng vào mã client khi build. Thẻ khám phá, Nexus, Explorer, sơ đồ hệ sinh thái và footer đều đọc từ cùng cấu hình.
+Không đưa thông tin bí mật vào biến `VITE_*`: các giá trị này được nhúng vào mã client khi build. Thẻ khám phá, Nexus và footer đều đọc từ cùng cấu hình.
 
 ## Giao diện và tùy chọn
 
 - Dark/Light mode lưu lựa chọn trong `localStorage` với khóa `edulab-theme`.
 - Hero chuyển giữa Trái Đất, Sao Kim và Sao Hỏa. Video chỉ tải khi cần; nếu video, poster hoặc ảnh hành tinh từ CDN lỗi, giao diện tự chuyển sang poster hoặc hình học CSS cục bộ mà không hiện biểu tượng ảnh hỏng.
 - Knowledge Galaxy nằm trong mục Nexus, nạp Three.js khi gần khung nhìn; năm node nhỏ di chuyển trên quỹ đạo với đường nối và hạt ánh sáng. Khoảng cách camera được tính từ kích thước thật của quỹ đạo để Galaxy lấp đầy canvas ở mọi tỷ lệ màn hình. Nhãn HTML đứng yên để luôn đọc và chọn được, kể cả khi WebGL không sẵn sàng.
-- Section Exa (sau Bộ khám phá) dùng minh họa 2.5D bằng CSS/SVG: các lớp `translateZ` trong một scene `preserve-3d`, tất cả gắn class `.ambient` nên tuân theo cùng vòng đời motion.
-- Living Universe dùng SVG/CSS cho minh họa từng môn, About, Timeline, Ecosystem, Exa, FAQ và footer. `motion-controller.js` cung cấp `initializeMotionSystem()`, `pauseMotion()`, `resumeMotion()`, `toggleMotion()` và `getMotionState()` cho SVG/CSS, WebGL và video Hero. Motion tự chạy khi tải trang; trạng thái `edulab-motion=paused` cũ bị bỏ qua, còn lựa chọn `running` được chuyển sang preference mới. Tùy chọn “Giảm chuyển động trang trí” ở footer lưu bằng khóa `edulab-reduce-motion`; chế độ hệ thống được áp dụng khi người dùng chưa chọn preference riêng, đồng thời tab ẩn và section ngoài màn hình vẫn tạm dừng motion.
+- Section Exa (sau Knowledge Galaxy) dùng minh họa 2.5D bằng CSS/SVG: các lớp `translateZ` trong một scene `preserve-3d`, tất cả gắn class `.ambient` nên tuân theo cùng vòng đời motion.
+- Living Universe dùng SVG/CSS cho minh họa từng môn, Exa, mục Thông tin và footer. `motion-controller.js` cung cấp `initializeMotionSystem()`, `pauseMotion()`, `resumeMotion()`, `toggleMotion()` và `getMotionState()` cho SVG/CSS, WebGL và video Hero. Motion tự chạy khi tải trang; trạng thái `edulab-motion=paused` cũ bị bỏ qua, còn lựa chọn `running` được chuyển sang preference mới. Tùy chọn “Giảm chuyển động trang trí” ở footer lưu bằng khóa `edulab-reduce-motion`; chế độ hệ thống được áp dụng khi người dùng chưa chọn preference riêng, đồng thời tab ẩn và section ngoài màn hình vẫn tạm dừng motion.
 - Media hành tinh dùng URL từ tài liệu tham chiếu do người dùng cung cấp. Cần xác nhận quyền sử dụng và tính ổn định của CDN trước khi phát hành công khai.
 - `src/data/labs.js` là nguồn dữ liệu Lab; `src/modules/` chứa các hành vi theo trách nhiệm; `src/utils/helpers.js` chứa tiện ích dùng chung.
-- Các tệp style được nạp theo thứ tự design tokens, style nền tảng, responsive overrides, Hero SpaceEdu, rồi `living-universe.css`.
-- Vite đưa URL Lab hợp lệ trực tiếp vào HTML build. Vì vậy nội dung và liên kết cốt lõi vẫn dùng được khi JavaScript bị tắt; JavaScript chỉ nâng cấp chúng thành Explorer, Nexus và trạng thái tương tác đầy đủ.
+- Các tệp style được nạp theo thứ tự design tokens, style nền tảng, responsive overrides, Hero SpaceEdu, `living-universe.css`, `exa.css`, rồi `premium.css` (mục Thông tin & Chính sách và lớp motion bổ sung).
+- Vite đưa URL Lab hợp lệ trực tiếp vào HTML build. Vì vậy nội dung và liên kết cốt lõi vẫn dùng được khi JavaScript bị tắt; JavaScript chỉ nâng cấp chúng thành Nexus, accordion và trạng thái tương tác đầy đủ. Khi không có JavaScript, mọi câu trả lời ở mục Thông tin đều hiển thị sẵn.
 
 ## Triển khai Cloudflare Pages
 
@@ -140,17 +140,19 @@ Cloudflare Pages build trực tiếp từ source: đặt **Build command** là `
 
 `tests/motion.spec.js` lấy giá trị transform/SVG tại 0, 2 và 5 giây sau entrance, kiểm tra desktop/mobile, auto-start, preference giảm motion, focus và frame WebGL. Hero được quan sát liên tục 10 giây không cần nút Play. Bộ regression còn kiểm tra 12 chiều rộng từ 320 đến 2560px, CDN failure, JavaScript disabled và WebGL context loss.
 
-Chạy Vite tại port 5188 để tạo ảnh và video:
+Chạy Vite tại port 5188 để tạo ảnh:
 
 ```powershell
 npm run dev -- --port 5188
 # Trong terminal khác:
 $env:QA_URL = 'http://127.0.0.1:5188'
 node scripts/capture-visuals.mjs
-npx playwright install ffmpeg
-node scripts/record-motion.mjs
 ```
 
 Tất cả output từ các lệnh này là generated QA artifact và bị ignore. Không dùng chúng làm baseline trong Git; kiến trúc và các invariant quan trọng được ghi trong `docs/PROJECT_CONTEXT.md`.
 
 Đo hiệu năng trên production preview: build, chạy preview tại port 4188, đặt `QA_URL` tương ứng rồi chạy `node scripts/measure-performance.mjs`. Kết quả là đo cục bộ trên Chrome, không thay thế INP thực địa hoặc kiểm thử điện thoại thật.
+
+## Thông tin & Chính sách
+
+Mục `#faq` ("Thông tin & Chính sách EduLab") chỉ chứa nội dung đã được chủ dự án xác nhận: chủ sở hữu REVENGER STUDIO (của Huu Nghia), bảo lưu mọi quyền; kênh liên hệ `huwnghiax0810@gmail.com` và `https://www.facebook.com/huwnghiax/`; cập nhật khi có tính năng, nội dung hoặc bản sửa lỗi, không có lịch cố định. Câu trả lời về dữ liệu mô tả đúng hành vi của mã nguồn (xem `docs/PROJECT_CONTEXT.md`, mục Data); khi thêm lưu trữ, biểu mẫu hay script bên thứ ba thì phải sửa câu trả lời đó trong cùng thay đổi. Không thêm cam kết thời hạn hỗ trợ, lịch phát hành hay thông tin pháp lý chưa được xác nhận.
